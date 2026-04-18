@@ -7,9 +7,8 @@
 - **Language**: TypeScript
 - **Linting**: ESLint (Next.js default config)
 - **Package manager**: TBD — not yet determined from repo
-- **Test runner**: None configured yet
 
-> Note: The repo is currently empty. Stack details above are based on stated intent; verify once the Next.js scaffold is committed.
+> Stack details are based on stated intent. Verify once the Next.js scaffold is committed.
 
 ---
 
@@ -17,16 +16,21 @@
 
 ```
 /
-├── tokens/              # Design tokens (colors, spacing, typography, etc.) — pulled from Figma
+├── tokens/
+│   ├── source/          # Raw Figma exports — DO NOT EDIT
+│   ├── tokens.css       # Generated CSS custom properties (do not hand-edit)
+│   ├── foundations.md   # Human-readable token audit
+│   └── README.md        # Token generation instructions (not yet written)
 ├── components/
-│   └── ui/              # UI primitives (Button, Input, Badge, etc.)
-├── stories/             # Component stories (Storybook or similar) — not yet configured
+│   └── ui/              # UI primitives — one .tsx + one .stories.tsx per component
 └── CLAUDE.md
 ```
 
-- `tokens/` will hold raw and transformed token files (e.g. JSON from Figma, CSS variables, TS constants)
-- `components/ui/` is for unstyled or lightly styled primitives only — no page-level components here
-- Stories live alongside or in a top-level `stories/` directory — TBD once a story runner is chosen
+- `tokens/source/` holds raw JSON exported from Figma. Never edit these files manually.
+- `tokens/tokens.css` is generated from source. Do not hand-edit.
+- `components/ui/` is for primitives only (Button, Input, Badge, etc.) — no page-level components.
+- Each component lives in its own file: `button.tsx` + `button.stories.tsx`. No barrel `index.ts` unless components share a directory.
+- Components will be pulled from Figma via the Figma MCP server.
 
 ---
 
@@ -34,28 +38,50 @@
 
 | Thing | Convention | Example |
 |---|---|---|
-| Files | kebab-case | `button.tsx`, `color-tokens.ts` |
+| Files | kebab-case | `button.tsx`, `icon-badge.tsx` |
 | Components | PascalCase | `Button`, `IconBadge` |
 | Props — variant | `variant` (not `kind`) | `variant="primary"` |
 | Props — size | `size` (not `sz`, not `scale`) | `size="sm"` |
-| Token files | kebab-case | `spacing.ts`, `font-size.ts` |
-| CSS custom properties | `--surmount-*` prefix | `--surmount-color-primary` |
+| CSS custom properties | kebab-case, no namespace prefix | `--color-bg-primary` |
 
 ---
 
-## 4. What Does NOT Exist Yet
+## 4. Token Naming Rule
 
-- **No design tokens** — no color, spacing, typography, or radius values have been defined
+Figma token keys are transformed to CSS custom properties by:
+
+1. Stripping leading category segments (e.g. `colorsBackground`, `colorsForeground`, `colorsText`, `colorsBorder`, `colorsEffects`)
+2. Converting the remainder from camelCase to kebab-case
+3. Prefixing with `--`
+
+**Examples** (to be verified once `tokens.css` is generated):
+
+| Figma key | CSS variable |
+|---|---|
+| `colorsBackgroundBgPrimary` | `--color-bg-primary` |
+| `colorsForegroundFgPrimary900` | `--color-fg-primary-900` |
+| `colorsTextTextSecondary700` | `--color-text-secondary-700` |
+| `colorsBorderBorderBrand` | `--color-border-brand` |
+| `spacingMd` | `--spacing-md` |
+| `radiusSm` | `--radius-sm` |
+| `fontSizeTextSm` | `--font-size-text-sm` |
+
+> Full transformation rule to be documented once `tokens.css` is generated and the exact stripping logic is confirmed.
+
+---
+
+## 5. What Does NOT Exist Yet
+
+- **No `tokens.css`** — token source JSON exists at `tokens/source/` but no CSS variables have been generated
 - **No UI components** — `components/ui/` does not exist; nothing has been built
 - **No Figma Code Connect setup** — no `.figma.ts` / `.figma.js` mapping files
-- **No Storybook or story runner** — no stories, no story config
-- **No Next.js scaffold** — the repo is currently empty; framework files not yet committed
-- **No test setup** — no Jest, Vitest, or Playwright config
+- **No story runner** — no Storybook config; `.stories.tsx` files are planned but none exist
+- **No Next.js scaffold** — framework files not yet committed
 - **No CI/CD** — no GitHub Actions workflows
 
 ---
 
-## 5. Design System Implementation Plan
+## 6. Design System Implementation Plan
 
 _To be filled in as work progresses._
 
