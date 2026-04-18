@@ -1,10 +1,18 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { Checkbox } from './checkbox';
 
+const FIGMA_URL = 'https://www.figma.com/design/vr9mgx3CwlKmdGujGIumRK/Surmount-Design-System?node-id=1097-63886';
+
 const meta: Meta<typeof Checkbox> = {
   title: 'UI/Checkbox',
   component: Checkbox,
   tags: ['autodocs'],
+  parameters: {
+    design: {
+      type: 'figma',
+      url: FIGMA_URL,
+    },
+  },
   argTypes: {
     type: {
       control: 'select',

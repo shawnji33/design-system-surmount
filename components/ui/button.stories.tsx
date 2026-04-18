@@ -16,10 +16,18 @@ const Icon = () => (
   </svg>
 );
 
+const FIGMA_URL = 'https://www.figma.com/design/vr9mgx3CwlKmdGujGIumRK/Surmount-Design-System?node-id=23487-11641';
+
 const meta: Meta<typeof Button> = {
   title: 'UI/Button',
   component: Button,
   tags: ['autodocs'],
+  parameters: {
+    design: {
+      type: 'figma',
+      url: FIGMA_URL,
+    },
+  },
   argTypes: {
     variant: {
       control: 'select',
