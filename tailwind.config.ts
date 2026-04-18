@@ -203,7 +203,10 @@ const config: Config = {
   "10xl": "var(--spacing-10xl)",
   "11xl": "var(--spacing-11xl)",
   "sm": "var(--spacing-sm)",
-  "5xl": "var(--spacing-5xl)"
+  "5xl": "var(--spacing-5xl)",
+  "2-5": "var(--spacing-2-5)",
+  "3-5": "var(--spacing-3-5)",
+  "4-5": "var(--spacing-4-5)"
 },
 
       borderRadius: {

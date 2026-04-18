@@ -5,9 +5,6 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { type ComponentPropsWithoutRef, type ReactNode } from 'react';
 import { cn } from '@/lib/utils';
 
-// Padding note: Figma uses 10/14/18px which have no semantic token.
-// Snapped to nearest: spacing-md(8)/spacing-xl(16)/spacing-2xl(20).
-// Height deviation: md ≈ 36px (Figma 40), lg ≈ 48px (Figma 44).
 const button = cva(
   [
     'inline-flex items-center justify-center overflow-hidden rounded-md',
@@ -19,21 +16,27 @@ const button = cva(
   {
     variants: {
       variant: {
-        // 2px skeuomorphic border; --color-alpha-white-10 ≈ 9.8% (Figma 12%)
+        // Fix #8: border uses alpha-white-12 (0.12) not alpha-white-10 (0.098)
         primary: [
-          'bg-bg-brand-solid border-2 border-[var(--color-alpha-white-10)] text-text-white',
+          'bg-bg-brand-solid border-2 border-[var(--color-alpha-white-12)] text-text-white',
           'hover:bg-bg-brand-solid-hover',
           'disabled:bg-bg-disabled disabled:border disabled:border-border-disabled-subtle disabled:text-fg-disabled',
         ],
+        // Fix #9: disabled keeps bg-primary (white), not bg-disabled
+        // Fix #11: focused shows bg-secondary
         secondary: [
           'bg-bg-primary border border-border-primary text-text-secondary-700',
           'hover:bg-bg-primary-hover hover:text-text-secondary-hover',
-          'disabled:bg-bg-disabled disabled:border-border-disabled-subtle disabled:text-fg-disabled',
+          'focus-visible:bg-bg-secondary',
+          'disabled:border-border-disabled-subtle disabled:text-fg-disabled',
         ],
+        // Fix #10: disabled stays transparent (no bg)
+        // Fix #12: focused shows bg-secondary
         tertiary: [
           'bg-transparent text-text-tertiary-600',
           'hover:bg-bg-primary-hover hover:text-text-tertiary-hover',
-          'disabled:bg-bg-disabled disabled:text-fg-disabled',
+          'focus-visible:bg-bg-secondary',
+          'disabled:text-fg-disabled',
         ],
         'link-color': [
           'bg-transparent text-text-brand-secondary-700',
@@ -47,11 +50,15 @@ const button = cva(
         ],
       },
       size: {
-        xs: 'px-md py-md gap-xs text-text-xs',
+        // Fix #1: xs px 8→10px (px-2-5)
+        xs: 'px-2-5 py-md gap-xs text-text-xs',
         sm: 'px-lg py-md gap-xs text-text-sm',
-        md: 'px-xl py-md gap-xs text-text-sm',
-        lg: 'px-xl py-lg gap-sm text-text-md',
-        xl: 'px-2xl py-lg gap-sm text-text-md',
+        // Fix #2,#4: md px 16→14px (px-3-5), py 8→10px (py-2-5)
+        md: 'px-3-5 py-2-5 gap-xs text-text-sm',
+        // Fix #5: lg py 12→10px (py-2-5)
+        lg: 'px-xl py-2-5 gap-sm text-text-md',
+        // Fix #3: xl px 20→18px (px-4-5)
+        xl: 'px-4-5 py-lg gap-sm text-text-md',
       },
       iconOnly: {
         true: 'aspect-square',
@@ -65,8 +72,7 @@ const button = cva(
       { iconOnly: true, size: 'md', class: 'px-md py-md' },
       { iconOnly: true, size: 'lg', class: 'px-lg py-lg' },
       { iconOnly: true, size: 'xl', class: 'px-lg py-lg' },
-      // Link variants: strip all padding, remove radius, allow overflow
-      // (compound variants are appended last so they win over base + size via tailwind-merge)
+      // Link variants: strip padding, remove radius, allow overflow
       { variant: 'link-color', class: 'px-0 py-0 rounded-none overflow-visible' },
       { variant: 'link-gray',  class: 'px-0 py-0 rounded-none overflow-visible' },
     ],
@@ -78,16 +84,26 @@ const button = cva(
   },
 );
 
-// Icon wrapper size per button size; snapped to nearest spacing token
+// Fix #6: xs icon 12→14px (size-3-5)
+// Fix #7: md icon 20→18px (size-4-5)
 const iconSizeClass: Record<NonNullable<ButtonVariants['size']>, string> = {
-  xs: 'size-lg',   // 12px  (Figma 14px; spacing-lg = 12)
-  sm: 'size-xl',   // 16px  exact
-  md: 'size-2xl',  // 20px  (Figma 18px; spacing-2xl = 20)
-  lg: 'size-2xl',  // 20px  exact
-  xl: 'size-2xl',  // 20px  exact
+  xs: 'size-3-5',  // 14px
+  sm: 'size-xl',   // 16px — exact
+  md: 'size-4-5',  // 18px
+  lg: 'size-2xl',  // 20px — exact
+  xl: 'size-2xl',  // 20px — exact
 };
 
-// Spinner: inline SVG + Tailwind animate-spin
+// Fix #13,#14: padded variants use a larger spinner (Figma "Button loading icon")
+// xs/sm/md → 20px, lg/xl → 24px; link variants use iconSizeClass instead
+const paddedSpinnerSizeClass: Record<NonNullable<ButtonVariants['size']>, string> = {
+  xs: 'size-2xl',  // 20px
+  sm: 'size-2xl',  // 20px
+  md: 'size-2xl',  // 20px
+  lg: 'size-3xl',  // 24px
+  xl: 'size-3xl',  // 24px
+};
+
 function ButtonSpinner({ className }: { className?: string }) {
   return (
     <svg
@@ -120,7 +136,6 @@ export type ButtonProps = {
   children?: ReactNode;
 } & Omit<ComponentPropsWithoutRef<'button'>, 'children'>;
 
-// Loading state shows the hover background for each hierarchy
 const loadingBgClass: Partial<Record<NonNullable<ButtonVariants['variant']>, string>> = {
   primary:   'bg-bg-brand-solid-hover',
   secondary: 'bg-bg-primary-hover',
@@ -143,6 +158,9 @@ export function Button({
   const Comp = asChild ? Slot : 'button';
   const sz = size ?? 'md';
   const vr = variant ?? 'primary';
+  // Fix #15: link variants get icon-sized spinner; padded variants get the larger spinner
+  const isLink = vr === 'link-color' || vr === 'link-gray';
+  const spinnerClass = isLink ? iconSizeClass[sz] : paddedSpinnerSizeClass[sz];
 
   return (
     <Comp
@@ -158,7 +176,7 @@ export function Button({
     >
       {loading ? (
         <>
-          <ButtonSpinner className={iconSizeClass[sz]} />
+          <ButtonSpinner className={spinnerClass} />
           {!iconOnly && children != null && (
             <span className="flex items-center justify-center px-xxs">{children}</span>
           )}
