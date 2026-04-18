@@ -202,8 +202,8 @@
 | Step | Value |
 |---|---|
 | 25 | `#fff9fc` |
-| 50 | `#fbe8f6` ⚠️ |
-| 100 | `#fbe8f6` ⚠️ |
+| 50 | `#fffafd` |
+| 100 | `#fbe8f6` |
 | 200 | `#f8d2ee` |
 | 300 | `#f4ade0` |
 | 400 | `#ec7fca` |
@@ -263,16 +263,16 @@ All values in `px`.
 
 | Token | Light | Dark |
 |---|---|---|
-| `colorsTextTextPrimary900` | `#0a0d12e5` | `#0a0d12e5` ⚠️ |
-| `colorsTextTextSecondary700` | `#0a0d12b2` | `#0a0d12b2` ⚠️ |
-| `colorsTextTextTertiary600` | `#0a0d1299` | `#0a0d1299` ⚠️ |
-| `colorsTextTextQuaternary500` | `#0a0d127f` | `#0a0d127f` ⚠️ |
+| `colorsTextTextPrimary900` | `#0a0d12e5` | `#ffffffe5` |
+| `colorsTextTextSecondary700` | `#0a0d12b2` | `#ffffffb2` |
+| `colorsTextTextTertiary600` | `#0a0d1299` | `#ffffff99` |
+| `colorsTextTextQuaternary500` | `#0a0d127f` | `#ffffff7f` |
 | `colorsTextTextDisabled` | `#0a0d1266` | `#85888e` |
 | `colorsTextTextPlaceholder` | `#0a0d1266` | `#85888e` |
 | `colorsTextTextPlaceholderSubtle` | `#0a0d124c` | `#373a41` |
 | `colorsTextTextWhite` | `#ffffff` | `#ffffff` |
-| `colorsTextTextSecondaryHover` | `#0a0d12cc` | `#0a0d12cc` ⚠️ |
-| `colorsTextTextTertiaryHover` | `#0a0d12b2` | `#0a0d12b2` ⚠️ |
+| `colorsTextTextSecondaryHover` | `#0a0d12cc` | `#ffffffcc` |
+| `colorsTextTextTertiaryHover` | `#0a0d12b2` | `#ffffffb2` |
 | `colorsTextTextBrandPrimary900` | `#2d3f7b` | `#f7f7f7` |
 | `colorsTextTextBrandSecondary700` | `#3757be` | `#cecfd2` |
 | `colorsTextTextBrandTertiary600` | `#406ad0` | `#94979c` |
@@ -287,7 +287,7 @@ All values in `px`.
 | `colorsTextTextTertiaryOnBrand` | `#c8dbf5` | `#94979c` |
 | `colorsTextTextQuaternaryOnBrand` | `#8eb8eb` | `#94979c` |
 
-> ⚠️ `TextPrimary900`, `TextSecondary700`, `TextTertiary600`, `TextQuaternary500`, `TextSecondaryHover`, `TextTertiaryHover` are **identical in light and dark** — these are dark alpha values that will render incorrectly on a dark background. Likely a Figma export issue.
+> Dark mode values corrected: Primary=white@90%, Secondary=white@70%, Tertiary=white@60%, Quaternary=white@50%, SecondaryHover=white@80%, TertiaryHover=white@70%.
 
 ### 3.2 Background
 
@@ -793,18 +793,18 @@ These are accent/extended colors used for badges, tags, and illustrations. Light
 | `xl` | 60 | 72 | 1.20 |
 | `2xl` | 72 | 90 | 1.25 |
 
-> Note: Display scale has two sub-`xs` steps (`xxxs` and `xxs`) that overlap with the text `xl` size (20px). Worth confirming intended usage: `displayXxxs`=18px and `displayXxs`=20px are the same size as `textLg` and `textXl`. These may be intended as "large body" or "small heading" sizes.
+> Note: Display and text share size values at the small end (18px/20px) by design — two separate font-style ramps (Inter display vs Geist body) using the same size steps.
 
 ---
 
 ## 9. Anomalies & Notes
 
-| # | Location | Issue |
-|---|---|---|
-| 1 | `1ColorModes.lightMode` text tokens | `TextPrimary900`, `TextSecondary700`, `TextTertiary600`, `TextQuaternary500`, `TextSecondaryHover`, `TextTertiaryHover` have **identical hex values in both light and dark**. All use dark-base alpha (`#0a0d12xx`), which will render as near-invisible on dark backgrounds. Likely needs dark-mode overrides. |
-| 2 | `primitives.style` Pink | `colorsPink50` and `colorsPink100` share the same hex value (`#fbe8f6`). No visual difference between these two stops. |
-| 3 | `1ColorModes` shadows | All standard shadow tokens are `#ffffff00` in dark mode. This is intentional — dark UIs omit drop shadows — but confirm this is desired before removing shadow CSS. |
-| 4 | `1ColorModes` Alpha | `AlphaWhite` and `AlphaBlack` semantics are **fully swapped** in dark mode. Ensure consumers reference the semantic token, not the primitive hex. |
-| 5 | `6Typography` display | `displayXxxs` (18px) and `displayXxs` (20px) overlap with `textLg` (18px) and `textXl` (20px). Confirm whether these are meant to be the same ramp or separate semantic roles. |
-| 6 | `5Containers` | No mobile max-width token — only padding. No tablet breakpoint. |
-| 7 | `3Spacing` | No `spacing` steps between `spacing11xl` (160px) and the top of the raw primitive scale. Semantic spacing caps at 160px; larger layout values must reference primitives. |
+| # | Location | Status | Note |
+|---|---|---|---|
+| 1 | Text tokens dark mode | ✅ Resolved | Dark mode values corrected to white alpha: Primary=90%, Secondary=70%, Tertiary=60%, Quaternary=50%, SecondaryHover=80%, TertiaryHover=70%. |
+| 2 | `primitives.style` Pink 50 | ✅ Resolved | Pink 50 corrected to `#fffafd`. |
+| 3 | `1ColorModes` shadows | ⏳ Deferred | All dark-mode shadow tokens are `#ffffff00`. Revisit when building shadowed components. |
+| 4 | `1ColorModes` Alpha | ℹ️ By design | `AlphaWhite`/`AlphaBlack` semantics are swapped in dark mode. Always reference the semantic token, never the raw hex. |
+| 5 | `6Typography` display overlap | ✅ Resolved | Overlap is intentional — two separate font ramps (Inter display, Geist body) sharing size steps. |
+| 6 | `5Containers` | ℹ️ Open | No tablet container padding or mobile max-width token defined. |
+| 7 | `3Spacing` | ℹ️ Open | Semantic spacing caps at 160px (`spacing11xl`). Larger layout values must use raw primitives. |
