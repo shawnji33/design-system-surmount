@@ -3,19 +3,22 @@
 import { type ComponentPropsWithoutRef, type ReactNode } from 'react';
 import { cn } from '@/lib/utils';
 
-// X icon (Phosphor X, DuoTone, viewBox 0 0 256 256, currentColor)
+// X icon (Phosphor X, REGULAR weight = stroke-based, viewBox 0 0 256 256)
 function XIcon({ className }: { className?: string }) {
   return (
-    <svg className={className} viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      <path
-        opacity="0.2"
-        d="M224 56 200 32 128 104 56 32 32 56l72 72-72 72 24 24 72-72 72 72 24-24-72-72Z"
-        fill="currentColor"
-      />
-      <path
-        d="M205.66 194.34a8 8 0 0 1-11.32 11.32L128 139.31l-66.34 66.35a8 8 0 0 1-11.32-11.32L116.69 128 50.34 61.66a8 8 0 0 1 11.32-11.32L128 116.69l66.34-66.35a8 8 0 0 1 11.32 11.32L139.31 128Z"
-        fill="currentColor"
-      />
+    <svg
+      className={className}
+      viewBox="0 0 256 256"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={16}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
+    >
+      <line x1="200" y1="56" x2="56" y2="200" />
+      <line x1="200" y1="200" x2="56" y2="56" />
     </svg>
   );
 }

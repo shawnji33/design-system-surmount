@@ -109,11 +109,11 @@ export function Toggle({
           disabled
             ? 'bg-[var(--color-toggle-button-fg-disabled)]'
             : 'bg-fg-white',
-          // Default knob: shadow-sm (elevated appearance, no border)
-          // Slim knob: shadow-xs + border that reflects pressed/hover state
+          // Both knob variants use shadow-card (the only elevation token).
+          // Slim knob also gets a border that reflects pressed/hover state.
           isSlim
             ? cn(
-                'shadow-xs border',
+                'shadow-card border',
                 disabled
                   ? 'border-[var(--color-toggle-border)]'
                   : checked
@@ -123,7 +123,7 @@ export function Toggle({
                       )
                     : 'border-[var(--color-toggle-border)]',
               )
-            : 'shadow-sm',
+            : 'shadow-card',
         )}
       />
     </button>

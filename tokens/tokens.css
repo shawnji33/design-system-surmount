@@ -331,34 +331,13 @@
   --color-utility-warning-300: #f5ba7c;
   --color-utility-success-300: #a2d3a5;
   --color-utility-purple-300: #bcb4fd;
-  --shadow-xs: #0a0c120c;
-  --shadow-sm-02: #0a0c1219;
-  --shadow-lg-01: #0a0c1214;
-  --shadow-lg-02: #0a0c1207;
-  --shadow-sm-01: #0a0c1219;
-  --shadow-3xl-01: #0a0c1223;
-  --shadow-2xl-01: #0a0c122d;
   --color-avatar-bg-neutral: #e0e0e0;
-  --shadow-md-01: #0a0c1219;
-  --shadow-md-02: #0a0c120f;
-  --shadow-xl-01: #0a0c1214;
-  --shadow-xl-02: #0a0c1207;
-  --shadow-mockup-main-centre-md: #0a0c1223;
-  --shadow-mockup-main-centre-lg: #0a0c122d;
-  --shadow-mockup-overlay-lg: #0a0c121e;
-  --shadow-mockup-grid-md: #0a0c1214;
   --focus-ring: #5585dc;
   --focus-ring-error: #cb6f68;
-  --shadow-skeumorphic-inner: #0a0c120c;
-  --shadow-skeumorphic-inner-border: #0a0c122d;
   --color-border-brand-alt: #406ad0;
   --color-toggle-border: #d5d6d9;
   --color-toggle-slim-border-pressed: #406ad0;
   --color-toggle-slim-border-pressed-hover: #3757be;
-  --shadow-lg-03: #0a0c120a;
-  --shadow-xl-03: #0a0c120a;
-  --shadow-2xl-02: #0a0c120a;
-  --shadow-3xl-02: #0a0c120a;
   --color-utility-yellow-50: #fefbe8;
   --color-utility-yellow-100: #fdf7c3;
   --color-utility-yellow-200: #feee94;
@@ -418,6 +397,7 @@
   --color-utility-indigo-600: #444ce6;
   --color-utility-orange-200: #f8dbaf;
   --color-utility-blue-600: #156fee;
+  --shadow-card: #0a0d1208;
 }
 
 /* ─── Semantic Colors — Dark Mode ──────────────────────────────────────────── */
@@ -588,31 +568,10 @@
   --color-utility-warning-300: #b84416;
   --color-utility-success-300: #316434;
   --color-utility-purple-300: #5925db;
-  --shadow-xs: #ffffff00;
-  --shadow-sm-02: #ffffff00;
-  --shadow-lg-01: #ffffff00;
-  --shadow-lg-02: #ffffff00;
-  --shadow-sm-01: #ffffff00;
-  --shadow-3xl-01: #ffffff00;
-  --shadow-2xl-01: #ffffff00;
-  --shadow-md-01: #ffffff00;
-  --shadow-md-02: #ffffff00;
-  --shadow-xl-01: #ffffff00;
-  --shadow-xl-02: #ffffff00;
-  --shadow-mockup-main-centre-md: #ffffff00;
-  --shadow-mockup-main-centre-lg: #ffffff00;
-  --shadow-mockup-overlay-lg: #ffffff00;
-  --shadow-mockup-grid-md: #ffffff00;
-  --shadow-skeumorphic-inner: #0c0e120c;
-  --shadow-skeumorphic-inner-border: #0c0e122d;
   --color-border-brand-alt: #373a41;
   --color-toggle-border: #ffffff00;
   --color-toggle-slim-border-pressed: #ffffff00;
   --color-toggle-slim-border-pressed-hover: #ffffff00;
-  --shadow-lg-03: #ffffff00;
-  --shadow-xl-03: #ffffff00;
-  --shadow-2xl-02: #ffffff00;
-  --shadow-3xl-02: #ffffff00;
   --color-utility-yellow-50: #542c0d;
   --color-utility-yellow-100: #713b11;
   --color-utility-yellow-200: #85490d;
@@ -661,6 +620,7 @@
   --color-utility-indigo-600: #7f98f9;
   --color-utility-orange-200: #932f18;
   --color-utility-blue-600: #53b0fd;
+  --shadow-card: #ffffff00;
 }
 
 /* ─── Spacing ───────────────────────────────────────────────────────────────── */

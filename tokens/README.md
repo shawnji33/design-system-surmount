@@ -146,25 +146,13 @@ fontSizeTextSm                         →  --font-size-text-sm         →  tex
 
 ### Shadows
 
+The system has **one** elevation token. Use `shadow-card` for any raised surface
+(cards, menus, knobs). It resolves to `0px 2px 12px 0px var(--shadow-card)`,
+where `--shadow-card` is `#0a0d1208` in light and transparent in dark.
+
 | Figma key | CSS variable | Tailwind class |
 |---|---|---|
-| `colorsEffectsShadowsShadowXs` | `--shadow-xs` | `shadow-xs` |
-| `colorsEffectsShadowsShadowSm02` | `--shadow-sm-02` | `shadow-sm-02` |
-| `colorsEffectsShadowsShadowLg01` | `--shadow-lg-01` | `shadow-lg-01` |
-| `colorsEffectsShadowsShadowLg02` | `--shadow-lg-02` | `shadow-lg-02` |
-| `colorsEffectsShadowsShadowSm01` | `--shadow-sm-01` | `shadow-sm-01` |
-| `colorsEffectsShadowsShadow3xl01` | `--shadow-3xl-01` | `shadow-3xl-01` |
-| `colorsEffectsShadowsShadow2xl01` | `--shadow-2xl-01` | `shadow-2xl-01` |
-| `colorsEffectsShadowsShadowMd01` | `--shadow-md-01` | `shadow-md-01` |
-| `colorsEffectsShadowsShadowMd02` | `--shadow-md-02` | `shadow-md-02` |
-| `colorsEffectsShadowsShadowXl01` | `--shadow-xl-01` | `shadow-xl-01` |
-| `colorsEffectsShadowsShadowXl02` | `--shadow-xl-02` | `shadow-xl-02` |
-| `colorsEffectsShadowsShadowSkeumorphicInner` | `--shadow-skeumorphic-inner` | `shadow-skeumorphic-inner` |
-| `colorsEffectsShadowsShadowSkeumorphicInnerBorder` | `--shadow-skeumorphic-inner-border` | `shadow-skeumorphic-inner-border` |
-| `colorsEffectsShadowsShadowLg03` | `--shadow-lg-03` | `shadow-lg-03` |
-| `colorsEffectsShadowsShadowXl03` | `--shadow-xl-03` | `shadow-xl-03` |
-| `colorsEffectsShadowsShadow2xl02` | `--shadow-2xl-02` | `shadow-2xl-02` |
-| `colorsEffectsShadowsShadow3xl02` | `--shadow-3xl-02` | `shadow-3xl-02` |
+| `Shadows/card` | `--shadow-card` | `shadow-card` |
 
 
 ## Spacing

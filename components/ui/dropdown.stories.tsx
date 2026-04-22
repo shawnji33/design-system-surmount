@@ -1,273 +1,329 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { Dropdown, SelectMenuItem } from './dropdown';
+import { Dropdown, SelectMenu, SelectMenuItem, type DropdownSize, type DropdownState, type DropdownType } from './dropdown';
 
 const FIGMA_URL =
-  'https://www.figma.com/design/vr9mgx3CwlKmdGujGIumRK/Surmount-Design-System?node-id=18-0';
+  'https://www.figma.com/design/vr9mgx3CwlKmdGujGIumRK/Surmount-Design-System?node-id=23554-20502';
 
-// Placeholder icon matching the Phosphor viewBox convention
-const Icon = () => (
-  <svg
-    width="100%"
-    height="100%"
-    viewBox="0 0 256 256"
-    xmlns="http://www.w3.org/2000/svg"
-    aria-hidden="true"
-  >
-    <circle cx="128" cy="128" r="88" stroke="#414651" strokeWidth="20" fill="none" />
-  </svg>
-);
+// ─── Phosphor regular icons (stroke-based, NOT filled-outline paths) ─────────
 
-// ─── Dropdown (trigger) meta ──────────────────────────────────────────────────
+const SVG_REGULAR = {
+  viewBox: '0 0 256 256',
+  fill: 'none',
+  stroke: '#414651',
+  strokeWidth: 16,
+  strokeLinecap: 'round',
+  strokeLinejoin: 'round',
+} as const;
+
+function FlagIcon() {
+  return (
+    <svg {...SVG_REGULAR} xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <line x1="48" y1="232" x2="48" y2="56" />
+      <path d="M48,56s48-40,80-8c0,0,32,32,80,8V176c-48,24-80-8-80-8-32-32-80,8-80,8" />
+    </svg>
+  );
+}
+
+function UserIcon() {
+  return (
+    <svg {...SVG_REGULAR} xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <circle cx="128" cy="96" r="64" />
+      <path d="M30.99,215.99a112.03,112.03,0,0,1,194.02,0" />
+    </svg>
+  );
+}
+
+const TEAM = [
+  { name: 'Phoenix Baker',   handle: '@phoenix' },
+  { name: 'Olivia Rhye',     handle: '@olivia' },
+  { name: 'Lana Steiner',    handle: '@lana' },
+  { name: 'Demi Wilkinson',  handle: '@demi' },
+  { name: 'Candice Wu',      handle: '@candice' },
+  { name: 'Natali Craig',    handle: '@natali' },
+  { name: 'Drew Cano',       handle: '@drew' },
+];
+
+// ─── Meta ────────────────────────────────────────────────────────────────────
 
 const meta: Meta<typeof Dropdown> = {
   title: 'UI/Dropdown',
   component: Dropdown,
   tags: ['autodocs'],
-  parameters: {
-    design: { type: 'figma', url: FIGMA_URL },
-  },
+  parameters: { design: { type: 'figma', url: FIGMA_URL } },
   argTypes: {
-    size:  { control: 'select', options: ['xs', 'sm', 'md'] },
-    state: { control: 'select', options: ['default', 'placeholder', 'focused', 'open', 'disabled'] },
+    size:  { control: 'select', options: ['xs', 'sm'] satisfies DropdownSize[] },
+    state: { control: 'select', options: ['default', 'placeholder', 'focused', 'open', 'disabled'] satisfies DropdownState[] },
+    type:  { control: 'select', options: ['default', 'icon-leading', 'search', 'country'] satisfies DropdownType[] },
+    // ReactNode props can't be sensibly edited in Storybook's controls panel —
+    // disable the "Set object" control which tries to assign `{}` and crashes React.
+    label:          { control: 'text' },
+    hintText:       { control: 'text' },
+    value:          { control: 'text' },
+    supportingText: { control: 'text' },
+    placeholder:    { control: 'text' },
+    iconLeading:    { control: false },
+    shortcut:       { control: false },
   },
   args: {
-    size: 'md',
+    size: 'sm',
     state: 'default',
-    label: 'Label',
-    placeholder: 'Select option',
-    value: undefined,
+    type: 'default',
+    label: 'Team member',
+    placeholder: 'Select team member',
+    value: 'Olivia Rhye',
+    supportingText: '@olivia',
     hintText: 'This is a hint text to help user.',
-    required: false,
-    helpIcon: false,
+    required: true,
+    helpIcon: true,
   },
+  decorators: [
+    (Story) => <div style={{ width: 320 }}><Story /></div>,
+  ],
 };
 
 export default meta;
 type Story = StoryObj<typeof Dropdown>;
 
-// ─── Default / playground ────────────────────────────────────────────────────
+// ─── Single-variant stories ──────────────────────────────────────────────────
 
 export const Default: Story = {};
+export const PlaceholderState: Story = { args: { state: 'placeholder' } };
+export const FocusedState:    Story = { args: { state: 'focused' } };
+export const DisabledState:   Story = { args: { state: 'disabled' } };
 
-export const WithValue: Story = {
-  args: { value: 'Selected option', state: 'default' },
-};
+export const IconLeading: Story = { args: { type: 'icon-leading' } };
 
-export const PlaceholderState: Story = {
-  args: { state: 'placeholder', value: undefined },
-};
-
-export const FocusedState: Story = {
-  args: { state: 'focused', value: 'Selected option' },
-};
-
-export const OpenState: Story = {
-  args: { state: 'open', value: 'Selected option' },
-};
-
-export const DisabledState: Story = {
-  args: { state: 'disabled', value: 'Disabled value' },
-};
-
-export const WithLeadingIcon: Story = {
-  args: { iconLeading: <Icon />, value: 'Option with icon' },
-};
-
-export const WithHelpIcon: Story = {
-  args: { helpIcon: true, required: true },
-};
-
-export const WithSupportingText: Story = {
+export const Search: Story = {
   args: {
-    value: 'San Francisco',
-    supportingText: 'California, USA',
+    type: 'search',
+    label: 'Search',
+    placeholder: 'Search',
+    value: undefined,
+    supportingText: undefined,
   },
 };
 
-export const NoLabelNoHint: Story = {
-  args: { label: undefined, hintText: undefined, value: 'Standalone trigger' },
+export const SearchWithValue: Story = {
+  args: {
+    type: 'search',
+    label: 'Search',
+    value: 'Olivia Rhye',
+    supportingText: '@olivia',
+  },
+};
+
+export const Country: Story = {
+  args: {
+    type: 'country',
+    label: 'Country',
+    placeholder: 'Country',
+    value: 'Canada',
+    supportingText: undefined,
+    iconLeading: <FlagIcon />,
+  },
+};
+
+// ─── Open state with rendered menu ───────────────────────────────────────────
+
+export const OpenWithMenu: Story = {
+  args: { state: 'open' },
+  render: (args) => (
+    <div className="relative">
+      <Dropdown {...args} />
+      <div className="mt-xs">
+        <SelectMenu>
+          {TEAM.map((p, i) => (
+            <SelectMenuItem
+              key={p.handle}
+              size={args.size}
+              selected={i === 1}
+              supportingText={p.handle}
+            >
+              {p.name}
+            </SelectMenuItem>
+          ))}
+        </SelectMenu>
+      </div>
+    </div>
+  ),
+};
+
+export const OpenSearchWithMenu: Story = {
+  args: {
+    state: 'open',
+    type: 'search',
+    label: 'Search',
+    value: 'Olivia Rhye',
+    supportingText: '@olivia',
+  },
+  render: (args) => (
+    <div className="relative">
+      <Dropdown {...args} />
+      <div className="mt-xs">
+        <SelectMenu>
+          {TEAM.map((p, i) => (
+            <SelectMenuItem
+              key={p.handle}
+              size={args.size}
+              selected={i === 1}
+              supportingText={p.handle}
+            >
+              {p.name}
+            </SelectMenuItem>
+          ))}
+        </SelectMenu>
+      </div>
+    </div>
+  ),
+};
+
+export const OpenIconLeadingWithMenu: Story = {
+  args: { state: 'open', type: 'icon-leading' },
+  render: (args) => (
+    <div className="relative">
+      <Dropdown {...args} />
+      <div className="mt-xs">
+        <SelectMenu>
+          {TEAM.map((p, i) => (
+            <SelectMenuItem
+              key={p.handle}
+              size={args.size}
+              selected={i === 1}
+              iconLeading={<UserIcon />}
+              supportingText={p.handle}
+            >
+              {p.name}
+            </SelectMenuItem>
+          ))}
+        </SelectMenu>
+      </div>
+    </div>
+  ),
 };
 
 // ─── All sizes ───────────────────────────────────────────────────────────────
 
 export const AllSizes: Story = {
   render: () => (
-    <div className="flex flex-col gap-6 p-6 max-w-sm">
-      {(['xs', 'sm', 'md'] as const).map((size) => (
+    <div className="flex flex-col gap-6 w-80">
+      {(['xs', 'sm'] as const).map((size) => (
         <Dropdown
           key={size}
           size={size}
           label={`Size ${size}`}
-          value={`${size} — selected value`}
+          value="Olivia Rhye"
+          supportingText="@olivia"
           hintText="Hint text"
+          required
+          helpIcon
         />
       ))}
     </div>
   ),
 };
 
-// ─── All states ──────────────────────────────────────────────────────────────
+// ─── All states (sm size, Default type) ──────────────────────────────────────
 
 export const AllStates: Story = {
   render: () => (
-    <div className="flex flex-col gap-6 p-6 max-w-sm">
+    <div className="flex flex-col gap-6 w-80">
       {(['default', 'placeholder', 'focused', 'open', 'disabled'] as const).map((state) => (
         <Dropdown
           key={state}
           state={state}
           label={state.charAt(0).toUpperCase() + state.slice(1)}
-          value={state !== 'placeholder' ? 'Selected value' : undefined}
+          value="Olivia Rhye"
+          supportingText="@olivia"
+          placeholder="Select team member"
           hintText="Hint text"
+          required
+          helpIcon
         />
       ))}
     </div>
   ),
 };
 
-// ─── All sizes × all states ──────────────────────────────────────────────────
+// ─── All types (sm size, Default state) ──────────────────────────────────────
 
-export const SizeStateMatrix: Story = {
+export const AllTypes: Story = {
   render: () => (
-    <div className="p-6 space-y-8">
-      {(['xs', 'sm', 'md'] as const).map((size) => (
-        <div key={size}>
-          <p className="text-text-xs text-text-tertiary-600 mb-4 font-medium uppercase tracking-wide">
-            Size: {size}
-          </p>
-          <div className="grid grid-cols-2 gap-4 max-w-lg">
-            {(['default', 'placeholder', 'focused', 'open', 'disabled'] as const).map((state) => (
-              <Dropdown
-                key={state}
-                size={size}
-                state={state}
-                label={state}
-                value={state !== 'placeholder' ? 'Option label' : undefined}
-              />
-            ))}
-          </div>
+    <div className="flex flex-col gap-6 w-80">
+      <Dropdown type="default"      label="Default"      value="Olivia Rhye" supportingText="@olivia" />
+      <Dropdown type="icon-leading" label="Icon leading" value="Olivia Rhye" supportingText="@olivia" />
+      <Dropdown type="search"       label="Search"       value="Olivia Rhye" supportingText="@olivia" />
+      <Dropdown type="country"      label="Country"      value="Canada"      iconLeading={<FlagIcon />} />
+    </div>
+  ),
+};
+
+// ─── Full type × size × state matrix ─────────────────────────────────────────
+
+const TYPES:  DropdownType[]  = ['default', 'icon-leading', 'search', 'country'];
+const SIZES:  DropdownSize[]  = ['xs', 'sm'];
+const STATES: DropdownState[] = ['default', 'placeholder', 'focused', 'open', 'disabled'];
+
+export const TypeSizeStateMatrix: Story = {
+  parameters: { layout: 'fullscreen' },
+  // Override the meta-level 320px width decorator — this matrix needs full width.
+  decorators: [(Story) => <Story />],
+  render: () => (
+    <div className="p-8 space-y-12">
+      {TYPES.map((type) => (
+        <div key={type} className="space-y-6">
+          <p className="text-text-md font-medium text-text-primary-900">Type: {type}</p>
+          {SIZES.map((size) => (
+            <div key={size} className="space-y-3">
+              <p className="text-text-xs font-medium text-text-tertiary-600">Size: {size}</p>
+              <div className="grid grid-cols-5 gap-6">
+                {STATES.map((state) => (
+                  <Dropdown
+                    key={state}
+                    type={type}
+                    size={size}
+                    state={state}
+                    label={state}
+                    value={type === 'country' ? 'Canada' : 'Olivia Rhye'}
+                    supportingText={type !== 'country' ? '@olivia' : undefined}
+                    placeholder={type === 'search' ? 'Search' : type === 'country' ? 'Country' : 'Select option'}
+                    iconLeading={type === 'country' ? <FlagIcon /> : undefined}
+                    required
+                    helpIcon
+                  />
+                ))}
+              </div>
+            </div>
+          ))}
         </div>
       ))}
     </div>
   ),
 };
 
-// ─── SelectMenuItem meta ─────────────────────────────────────────────────────
+// ─── Dark mode ───────────────────────────────────────────────────────────────
 
-const menuItemMeta: Meta<typeof SelectMenuItem> = {
-  title: 'UI/SelectMenuItem',
-  component: SelectMenuItem,
-  tags: ['autodocs'],
-  parameters: {
-    design: { type: 'figma', url: FIGMA_URL },
-  },
-  argTypes: {
-    size:     { control: 'select', options: ['xs', 'sm', 'md'] },
-    selected: { control: 'boolean' },
-    disabled: { control: 'boolean' },
-  },
-  args: {
-    size: 'md',
-    selected: false,
-    disabled: false,
-    children: 'Menu item label',
-  },
-  decorators: [
-    (Story) => (
-      <div className="w-64 border border-border-primary rounded-md shadow-md bg-bg-primary p-xs">
-        <Story />
-      </div>
-    ),
-  ],
+export const DarkMode: Story = {
+  render: () => (
+    <div data-theme="dark" className="bg-bg-primary p-6 space-y-6">
+      <Dropdown label="Default" value="Olivia Rhye" supportingText="@olivia" required helpIcon />
+      <Dropdown type="icon-leading" label="Icon leading" value="Olivia Rhye" supportingText="@olivia" />
+      <Dropdown type="search" label="Search" value="Olivia Rhye" supportingText="@olivia" />
+      <Dropdown type="country" label="Country" value="Canada" iconLeading={<FlagIcon />} />
+    </div>
+  ),
 };
 
-export const MenuItem_Default: StoryObj<typeof SelectMenuItem> = {
-  ...menuItemMeta,
-  render: (args) => <SelectMenuItem {...args} />,
-} as StoryObj<typeof SelectMenuItem>;
+// ─── SelectMenuItem stories ──────────────────────────────────────────────────
 
-export const MenuItem_Selected: StoryObj<typeof SelectMenuItem> = {
-  ...menuItemMeta,
-  args: { selected: true, children: 'Selected item' },
-  render: (args) => <SelectMenuItem {...args} />,
-} as StoryObj<typeof SelectMenuItem>;
-
-export const MenuItem_Disabled: StoryObj<typeof SelectMenuItem> = {
-  ...menuItemMeta,
-  args: { disabled: true, children: 'Disabled item' },
-  render: (args) => <SelectMenuItem {...args} />,
-} as StoryObj<typeof SelectMenuItem>;
-
-export const MenuItem_WithLeadingIcon: StoryObj<typeof SelectMenuItem> = {
-  ...menuItemMeta,
-  args: { iconLeading: <Icon />, children: 'Item with icon' },
-  render: (args) => <SelectMenuItem {...args} />,
-} as StoryObj<typeof SelectMenuItem>;
-
-export const MenuItem_WithSupportingText: StoryObj<typeof SelectMenuItem> = {
-  ...menuItemMeta,
-  args: { children: 'San Francisco', supportingText: 'California, USA' },
-  render: (args) => <SelectMenuItem {...args} />,
-} as StoryObj<typeof SelectMenuItem>;
-
-// ─── SelectMenuItem — all sizes ──────────────────────────────────────────────
-
-export const MenuItem_AllSizes: StoryObj<typeof SelectMenuItem> = {
-  ...menuItemMeta,
+export const MenuItemAllStates: Story = {
   render: () => (
-    <div className="w-64 border border-border-primary rounded-md shadow-md bg-bg-primary p-xs space-y-0">
-      {(['xs', 'sm', 'md'] as const).map((size) => (
-        <SelectMenuItem key={size} size={size} iconLeading={<Icon />}>
-          Size {size} item
-        </SelectMenuItem>
-      ))}
-    </div>
-  ),
-} as StoryObj<typeof SelectMenuItem>;
-
-// ─── SelectMenuItem — all states ─────────────────────────────────────────────
-
-export const MenuItem_AllStates: StoryObj<typeof SelectMenuItem> = {
-  ...menuItemMeta,
-  render: () => (
-    <div className="w-64 border border-border-primary rounded-md shadow-md bg-bg-primary p-xs space-y-0">
-      <SelectMenuItem iconLeading={<Icon />}>Default item</SelectMenuItem>
-      <SelectMenuItem iconLeading={<Icon />} selected>Selected item</SelectMenuItem>
-      <SelectMenuItem iconLeading={<Icon />} disabled>Disabled item</SelectMenuItem>
-    </div>
-  ),
-} as StoryObj<typeof SelectMenuItem>;
-
-// ─── SelectMenuItem — size × state matrix ────────────────────────────────────
-
-export const MenuItem_SizeStateMatrix: StoryObj<typeof SelectMenuItem> = {
-  ...menuItemMeta,
-  render: () => (
-    <div className="p-6 space-y-6">
-      {(['xs', 'sm', 'md'] as const).map((size) => (
-        <div key={size} className="w-64 border border-border-primary rounded-md shadow-md bg-bg-primary p-xs">
-          <p className="px-sm py-xs text-text-xs text-text-tertiary-600 font-medium">Size: {size}</p>
-          <SelectMenuItem size={size} iconLeading={<Icon />}>Default</SelectMenuItem>
-          <SelectMenuItem size={size} iconLeading={<Icon />} selected>Selected</SelectMenuItem>
-          <SelectMenuItem size={size} iconLeading={<Icon />} disabled>Disabled</SelectMenuItem>
-        </div>
-      ))}
-    </div>
-  ),
-} as StoryObj<typeof SelectMenuItem>;
-
-// ─── Composed: trigger + menu ─────────────────────────────────────────────────
-
-export const ComposedDropdown: Story = {
-  render: () => (
-    <div className="p-6 space-y-2 max-w-xs">
-      <Dropdown label="City" value="San Francisco" hintText="Select your city" />
-      <div className="border border-border-primary rounded-md shadow-md bg-bg-primary p-xs mt-1">
-        {['San Francisco', 'New York', 'Los Angeles', 'Chicago'].map((city, i) => (
-          <SelectMenuItem key={city} selected={i === 0} iconLeading={<Icon />}>
-            {city}
-          </SelectMenuItem>
-        ))}
-      </div>
+    <div className="w-80">
+      <SelectMenu>
+        <SelectMenuItem supportingText="@phoenix">Phoenix Baker</SelectMenuItem>
+        <SelectMenuItem supportingText="@olivia" selected>Olivia Rhye</SelectMenuItem>
+        <SelectMenuItem supportingText="@lana">Lana Steiner</SelectMenuItem>
+        <SelectMenuItem supportingText="@demi" disabled>Demi Wilkinson</SelectMenuItem>
+      </SelectMenu>
     </div>
   ),
 };

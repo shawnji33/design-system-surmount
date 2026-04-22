@@ -332,16 +332,10 @@ const config: Config = {
 },
 
       boxShadow: {
-        // Each size uses its shadow color token(s); dark mode tokens are transparent,
-        // so shadows disappear automatically without extra dark: classes.
-        xs:    '0px 1px 2px 0px var(--shadow-xs)',
-        sm:    '0px 1px 2px 0px var(--shadow-sm-01), 0px 1px 3px 0px var(--shadow-sm-02)',
-        md:    '0px 2px 4px -2px var(--shadow-md-01), 0px 4px 8px -2px var(--shadow-md-02)',
-        lg:    '0px 4px 6px -2px var(--shadow-lg-01), 0px 12px 16px -4px var(--shadow-lg-02)',
-        xl:    '0px 8px 8px -4px var(--shadow-xl-01), 0px 20px 24px -4px var(--shadow-xl-02)',
-        '2xl': '0px 24px 48px -12px var(--shadow-2xl-01)',
-        '3xl': '0px 32px 64px -12px var(--shadow-3xl-01)',
-        none:  'none',
+        // Single elevation token. The shadow color goes transparent in dark mode,
+        // so the shadow disappears automatically without dark: variants.
+        card: '0px 2px 12px 0px var(--shadow-card)',
+        none: 'none',
       },
     },
   },

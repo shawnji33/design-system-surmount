@@ -18,7 +18,7 @@ const meta: Meta<typeof Sidebar> = {
   argTypes: {
     active: {
       control: 'select',
-      options: ['home', 'marketplace', 'create'],
+      options: ['home', 'marketplace', 'create', 'clients'],
     },
     userInitial: { control: 'text' },
   },
@@ -49,14 +49,21 @@ export const Create: Story = {
   args: { active: 'create' },
 };
 
+// ─── Clients ─────────────────────────────────────────────────────────────────
+
+export const Clients: Story = {
+  args: { active: 'clients' },
+};
+
 // ─── All States ──────────────────────────────────────────────────────────────
 
 export const AllStates: Story = {
   render: () => (
     <div className="flex flex-row bg-bg-primary" style={{ height: '100vh' }}>
-      <Sidebar active="home" userInitial="S" />
+      <Sidebar active="home"        userInitial="S" />
       <Sidebar active="marketplace" userInitial="M" />
-      <Sidebar active="create" userInitial="C" />
+      <Sidebar active="create"      userInitial="C" />
+      <Sidebar active="clients"     userInitial="L" />
     </div>
   ),
 };
