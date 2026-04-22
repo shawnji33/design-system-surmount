@@ -72,10 +72,12 @@ const SAMPLE_DATA: Strategy[] = [
   },
 ];
 
-const statusColorMap: Record<Strategy['status'], 'success' | 'warning' | 'error'> = {
+// Closed is not an error state — it's an inactive/historical strategy.
+// Map it to gray so the table doesn't scream danger at the user.
+const statusColorMap: Record<Strategy['status'], 'success' | 'warning' | 'gray'> = {
   active: 'success',
   paused: 'warning',
-  closed: 'error',
+  closed: 'gray',
 };
 
 const riskColorMap: Record<Strategy['risk'], 'success' | 'warning' | 'error'> = {
@@ -170,9 +172,9 @@ type Story = StoryObj<typeof Table>;
 export const Default: Story = {
   render: () => (
     <Table
-      columns={COLUMNS as TableColumn<Record<string, unknown>>[]}
-      data={SAMPLE_DATA as unknown as Record<string, unknown>[]}
-      rowKey={(row) => (row as unknown as Strategy).id}
+      columns={COLUMNS}
+      data={SAMPLE_DATA}
+      rowKey={(row) => row.id}
     />
   ),
 };
@@ -186,9 +188,9 @@ export const Selectable: Story = {
 
     return (
       <Table
-        columns={COLUMNS as TableColumn<Record<string, unknown>>[]}
-        data={SAMPLE_DATA as unknown as Record<string, unknown>[]}
-        rowKey={(row) => (row as unknown as Strategy).id}
+        columns={COLUMNS}
+        data={SAMPLE_DATA}
+        rowKey={(row) => row.id}
         selectable
         selectedKeys={selected}
         onSelectionChange={setSelected}
@@ -207,8 +209,8 @@ export const Sortable: Story = {
     const [sortDir, setSortDir] = useState<'asc' | 'desc'>('desc');
 
     const sorted = [...SAMPLE_DATA].sort((a, b) => {
-      const av = (a as Record<string, unknown>)[sortKey];
-      const bv = (b as Record<string, unknown>)[sortKey];
+      const av = (a as unknown as Record<string, unknown>)[sortKey];
+      const bv = (b as unknown as Record<string, unknown>)[sortKey];
       if (av == null || bv == null) return 0;
       const cmp = av < bv ? -1 : av > bv ? 1 : 0;
       return sortDir === 'asc' ? cmp : -cmp;
@@ -216,9 +218,9 @@ export const Sortable: Story = {
 
     return (
       <Table
-        columns={COLUMNS as TableColumn<Record<string, unknown>>[]}
-        data={sorted as unknown as Record<string, unknown>[]}
-        rowKey={(row) => (row as unknown as Strategy).id}
+        columns={COLUMNS}
+        data={sorted}
+        rowKey={(row) => row.id}
         sortKey={sortKey}
         sortDirection={sortDir}
         onSort={(key, dir) => {
@@ -235,9 +237,9 @@ export const Sortable: Story = {
 export const Striped: Story = {
   render: () => (
     <Table
-      columns={COLUMNS as TableColumn<Record<string, unknown>>[]}
-      data={SAMPLE_DATA as unknown as Record<string, unknown>[]}
-      rowKey={(row) => (row as unknown as Strategy).id}
+      columns={COLUMNS}
+      data={SAMPLE_DATA}
+      rowKey={(row) => row.id}
       striped
     />
   ),
@@ -248,9 +250,9 @@ export const Striped: Story = {
 export const EmptyState: Story = {
   render: () => (
     <Table
-      columns={COLUMNS as TableColumn<Record<string, unknown>>[]}
+      columns={COLUMNS}
       data={[]}
-      rowKey={(row) => String((row as Record<string, unknown>).id ?? '')}
+      rowKey={(row) => row.id}
       emptyState={
         <div className="flex flex-col items-center gap-md py-2xl">
           <p className="text-text-sm text-fg-tertiary-600 font-body">No strategies found.</p>
@@ -269,9 +271,9 @@ export const DarkMode: Story = {
   render: () => (
     <div data-theme="dark" className="bg-bg-primary p-xl rounded-xl">
       <Table
-        columns={COLUMNS as TableColumn<Record<string, unknown>>[]}
-        data={SAMPLE_DATA as unknown as Record<string, unknown>[]}
-        rowKey={(row) => (row as unknown as Strategy).id}
+        columns={COLUMNS}
+        data={SAMPLE_DATA}
+        rowKey={(row) => row.id}
       />
     </div>
   ),
