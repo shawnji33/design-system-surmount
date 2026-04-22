@@ -485,7 +485,7 @@ export function Table<T>({
                 <tr
                   key={key}
                   className={cn(
-                    'border-b border-border-secondary-alt transition-colors duration-[100ms]',
+                    'border-b border-border-secondary-alt last:border-b-0 transition-colors duration-[100ms]',
                     isSelected
                       ? 'bg-utility-brand-50'
                       : isStriped
