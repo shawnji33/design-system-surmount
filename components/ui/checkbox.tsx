@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, type ComponentPropsWithoutRef } from 'react';
+import { useEffect, useRef, type ComponentPropsWithoutRef, type ReactNode } from 'react';
 import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 
@@ -22,13 +22,13 @@ function MinusIcon({ className }: { className?: string }) {
   );
 }
 
-// ─── cva ─────────────────────────────────────────────────────────────────────
+// ─── Control (the visible square/circle) ─────────────────────────────────────
 
 const control = cva(
   [
     'relative inline-flex shrink-0 items-center justify-center overflow-hidden',
     'border transition-colors cursor-pointer',
-    // Double focus ring via the hidden input's :focus-visible (Tailwind has-[...] requires v3.4+)
+    // Double focus ring via the hidden input's :focus-visible
     'has-[:focus-visible]:shadow-[0_0_0_2px_var(--color-bg-primary),0_0_0_4px_var(--focus-ring)]',
     'has-[:disabled]:cursor-not-allowed',
   ],
@@ -38,38 +38,69 @@ const control = cva(
         checkbox: '',
         radio: 'rounded-full',
       },
+      // xs and sm share the 16px control size; only label sizing differs.
       size: {
-        sm: 'size-xl',   // 16px — spacing-xl
-        md: 'size-2xl',  // 20px — spacing-2xl
+        xs: 'size-xl',   // 16px
+        sm: 'size-xl',   // 16px
+        md: 'size-2xl',  // 20px
       },
     },
     compoundVariants: [
-      { type: 'checkbox', size: 'sm', class: 'rounded-xs' },  // radius-xs = 4px
-      { type: 'checkbox', size: 'md', class: 'rounded-sm' },  // radius-sm = 6px
+      { type: 'checkbox', size: 'xs', class: 'rounded-xs' },
+      { type: 'checkbox', size: 'sm', class: 'rounded-xs' },
+      { type: 'checkbox', size: 'md', class: 'rounded-sm' },
     ],
     defaultVariants: { type: 'checkbox', size: 'sm' },
   },
 );
 
-// Icon area: ~12.5% inset on sm (icon = 12px), ~15% inset on md (icon = 14px)
-const iconSizeClass: Record<'sm' | 'md', string> = {
-  sm: 'size-lg',   // 12px — spacing-lg
-  md: 'size-3-5',  // 14px — spacing-3-5
+const iconSizeClass: Record<CheckboxSize, string> = {
+  xs: 'size-lg',   // 12px
+  sm: 'size-lg',   // 12px
+  md: 'size-3-5',  // 14px
 };
 
-// Radio inner dot occupies 37.5% of the control (remainder of 31.25% inset each side for sm)
-const radioDotInset: Record<'sm' | 'md', string> = {
-  sm: 'inset-[31.25%]',  // ≈5px on each side → 6px dot
-  md: 'inset-[30%]',     // 6px on each side → 8px dot
+const radioDotInset: Record<CheckboxSize, string> = {
+  xs: 'inset-[31.25%]',  // 6px dot
+  sm: 'inset-[31.25%]',  // 6px dot
+  md: 'inset-[30%]',     // 8px dot
+};
+
+// ─── Label/text typography (Text=True variants) ──────────────────────────────
+
+const labelGap: Record<CheckboxSize, string> = {
+  xs: 'gap-sm',  // 6px
+  sm: 'gap-md',  // 8px
+  md: 'gap-lg',  // 12px
+};
+
+const labelTextSize: Record<CheckboxSize, string> = {
+  xs: 'text-text-xs',
+  sm: 'text-text-sm',
+  md: 'text-text-md',
+};
+
+// md spec uses gap-xxs (2px) between label and supporting text; xs/sm stack flush
+const labelStackGap: Record<CheckboxSize, string> = {
+  xs: 'gap-0',
+  sm: 'gap-0',
+  md: 'gap-xxs',
 };
 
 // ─── Prop types ───────────────────────────────────────────────────────────────
 
+export type CheckboxSize = 'xs' | 'sm' | 'md';
+
 export type CheckboxProps = {
   type?: 'checkbox' | 'radio';
-  size?: 'sm' | 'md';
+  /** xs is intended for radio rows; checkbox controls visually equal sm at xs. */
+  size?: CheckboxSize;
   checked?: boolean;
   indeterminate?: boolean;
+  /** Optional row label. When set, the control + text render side-by-side inside a <label>. */
+  label?: ReactNode;
+  /** Secondary line below the label. Requires `label`. */
+  supportingText?: ReactNode;
 } & Omit<ComponentPropsWithoutRef<'input'>, 'type' | 'size'>;
 
 // ─── Component ───────────────────────────────────────────────────────────────
@@ -80,12 +111,14 @@ export function Checkbox({
   checked = false,
   indeterminate = false,
   disabled = false,
+  label,
+  supportingText,
   className,
   ...props
 }: CheckboxProps) {
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // `indeterminate` is a DOM property, not an HTML attribute — must be set via ref
+  // `indeterminate` is a DOM property — must be set via ref
   useEffect(() => {
     if (inputRef.current && type === 'checkbox') {
       inputRef.current.indeterminate = indeterminate && !checked;
@@ -93,10 +126,9 @@ export function Checkbox({
   }, [indeterminate, checked, type]);
 
   const isRadio = type === 'radio';
-  // isActive: either checked, or indeterminate checkbox (both fill with brand solid)
   const isActive = checked || (!isRadio && indeterminate);
 
-  return (
+  const controlNode = (
     <span
       className={cn(
         control({ type, size }),
@@ -105,10 +137,11 @@ export function Checkbox({
           : isActive
           ? 'bg-bg-brand-solid border-0'
           : 'border-border-primary',
-        className,
+        // Only apply consumer className to the bare control when there's no label;
+        // when wrapped in a label, the className goes on the <label> wrapper instead.
+        label == null && className,
       )}
     >
-      {/* Visually hidden native input: owns focus, keyboard nav, and form submission */}
       <input
         ref={inputRef}
         type={type}
@@ -118,7 +151,6 @@ export function Checkbox({
         {...props}
       />
 
-      {/* Checkbox: check tick or minus (indeterminate) */}
       {!isRadio && isActive && (
         <span
           className={cn(
@@ -134,7 +166,6 @@ export function Checkbox({
         </span>
       )}
 
-      {/* Radio: centered circular dot */}
       {isRadio && checked && (
         <span
           className={cn(
@@ -146,5 +177,47 @@ export function Checkbox({
         />
       )}
     </span>
+  );
+
+  // No label → return the bare control (preserves existing API used by Table)
+  if (label == null) return controlNode;
+
+  // With label → wrap in <label> for click-to-toggle, render text column
+  return (
+    <label
+      className={cn(
+        'inline-flex items-start font-body',
+        labelGap[size],
+        disabled ? 'cursor-not-allowed' : 'cursor-pointer',
+        className,
+      )}
+    >
+      {/* pt-xxs (2px) lifts the control to align with the label cap-height baseline */}
+      <span className="flex items-center justify-center pt-xxs shrink-0">
+        {controlNode}
+      </span>
+      <span className={cn('flex flex-col flex-1 min-w-0', labelStackGap[size])}>
+        <span
+          className={cn(
+            'font-medium',
+            labelTextSize[size],
+            disabled ? 'text-text-disabled' : 'text-text-secondary-700',
+          )}
+        >
+          {label}
+        </span>
+        {supportingText != null && (
+          <span
+            className={cn(
+              'font-normal',
+              labelTextSize[size],
+              disabled ? 'text-text-disabled' : 'text-text-tertiary-600',
+            )}
+          >
+            {supportingText}
+          </span>
+        )}
+      </span>
+    </label>
   );
 }

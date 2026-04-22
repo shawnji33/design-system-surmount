@@ -1,17 +1,15 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { Checkbox } from './checkbox';
+import { Checkbox, type CheckboxSize } from './checkbox';
 
-const FIGMA_URL = 'https://www.figma.com/design/vr9mgx3CwlKmdGujGIumRK/Surmount-Design-System?node-id=1097-63886';
+const FIGMA_URL =
+  'https://www.figma.com/design/vr9mgx3CwlKmdGujGIumRK/Surmount-Design-System?node-id=1097-63652';
 
 const meta: Meta<typeof Checkbox> = {
   title: 'UI/Checkbox',
   component: Checkbox,
   tags: ['autodocs'],
   parameters: {
-    design: {
-      type: 'figma',
-      url: FIGMA_URL,
-    },
+    design: { type: 'figma', url: FIGMA_URL },
   },
   argTypes: {
     type: {
@@ -20,11 +18,13 @@ const meta: Meta<typeof Checkbox> = {
     },
     size: {
       control: 'select',
-      options: ['sm', 'md'],
+      options: ['xs', 'sm', 'md'] satisfies CheckboxSize[],
     },
     checked: { control: 'boolean' },
     indeterminate: { control: 'boolean' },
     disabled: { control: 'boolean' },
+    label: { control: 'text' },
+    supportingText: { control: 'text' },
   },
   args: {
     type: 'checkbox',
@@ -42,62 +42,98 @@ type Story = StoryObj<typeof Checkbox>;
 
 export const Default: Story = {};
 
-// ─── Checkbox states ─────────────────────────────────────────────────────────
+// ─── Bare control states ─────────────────────────────────────────────────────
 
-export const Checked: Story = {
-  args: { checked: true },
+export const Checked:               Story = { args: { checked: true } };
+export const Indeterminate:         Story = { args: { indeterminate: true } };
+export const Disabled:              Story = { args: { disabled: true } };
+export const CheckedDisabled:       Story = { args: { checked: true, disabled: true } };
+export const IndeterminateDisabled: Story = { args: { indeterminate: true, disabled: true } };
+
+// ─── Radio bare states ───────────────────────────────────────────────────────
+
+export const Radio:                Story = { args: { type: 'radio' } };
+export const RadioChecked:         Story = { args: { type: 'radio', checked: true } };
+export const RadioDisabled:        Story = { args: { type: 'radio', disabled: true } };
+export const RadioCheckedDisabled: Story = { args: { type: 'radio', checked: true, disabled: true } };
+
+// ─── With text label + supporting text ───────────────────────────────────────
+
+export const WithLabel: Story = {
+  args: {
+    label: 'Remember me',
+    supportingText: 'Save my login details for next time.',
+  },
 };
 
-export const Indeterminate: Story = {
-  args: { indeterminate: true },
+export const WithLabelChecked: Story = {
+  args: {
+    checked: true,
+    label: 'Remember me',
+    supportingText: 'Save my login details for next time.',
+  },
 };
 
-export const Disabled: Story = {
-  args: { disabled: true },
+export const WithLabelDisabled: Story = {
+  args: {
+    disabled: true,
+    label: 'Remember me',
+    supportingText: 'Save my login details for next time.',
+  },
 };
 
-export const CheckedDisabled: Story = {
-  args: { checked: true, disabled: true },
+export const WithLabelNoSupporting: Story = {
+  args: { label: 'Remember me' },
 };
 
-export const IndeterminateDisabled: Story = {
-  args: { indeterminate: true, disabled: true },
+// ─── Radio rows (xs is radio-only per spec) ──────────────────────────────────
+
+export const RadioWithLabel: Story = {
+  args: {
+    type: 'radio',
+    label: 'Remember me',
+    supportingText: 'Save my login details for next time.',
+  },
 };
 
-// ─── Radio states ─────────────────────────────────────────────────────────────
-
-export const Radio: Story = {
-  args: { type: 'radio' },
+export const RadioXsWithLabel: Story = {
+  args: {
+    type: 'radio',
+    size: 'xs',
+    label: 'Remember me',
+    supportingText: 'Save my login details for next time.',
+  },
 };
 
-export const RadioChecked: Story = {
-  args: { type: 'radio', checked: true },
-};
-
-export const RadioDisabled: Story = {
-  args: { type: 'radio', disabled: true },
-};
-
-export const RadioCheckedDisabled: Story = {
-  args: { type: 'radio', checked: true, disabled: true },
-};
-
-// ─── All sizes ───────────────────────────────────────────────────────────────
+// ─── All sizes (bare control + with label) ───────────────────────────────────
 
 export const AllSizes: Story = {
-  render: (args) => (
-    <div className="flex items-center gap-6 p-4">
-      {(['sm', 'md'] as const).map((size) => (
-        <div key={size} className="flex flex-col items-center gap-2">
-          <span className="text-text-xs text-text-tertiary-600">{size}</span>
-          <Checkbox {...args} size={size} />
-        </div>
-      ))}
+  render: () => (
+    <div className="flex flex-col gap-8 p-4">
+      <div className="flex items-center gap-6">
+        {(['xs', 'sm', 'md'] as const).map((size) => (
+          <div key={size} className="flex flex-col items-center gap-2">
+            <span className="text-text-xs text-text-tertiary-600">{size}</span>
+            <Checkbox type="radio" size={size} />
+          </div>
+        ))}
+      </div>
+      <div className="flex flex-col gap-4 max-w-sm">
+        {(['xs', 'sm', 'md'] as const).map((size) => (
+          <Checkbox
+            key={size}
+            type="radio"
+            size={size}
+            label={`Size ${size} — Remember me`}
+            supportingText="Save my login details for next time."
+          />
+        ))}
+      </div>
     </div>
   ),
 };
 
-// ─── State matrix (all states × 2 sizes × 2 types) ──────────────────────────
+// ─── Full state matrix (bare controls) ───────────────────────────────────────
 
 export const StateMatrix: Story = {
   render: () => (
@@ -108,19 +144,13 @@ export const StateMatrix: Story = {
           {(['sm', 'md'] as const).map((size) => (
             <div key={size} className="flex items-center gap-4">
               <span className="w-6 text-text-xs text-text-tertiary-600">{size}</span>
-              {/* Default unchecked */}
               <Checkbox type={type} size={size} />
-              {/* Checked */}
               <Checkbox type={type} size={size} checked onChange={() => {}} />
-              {/* Indeterminate (checkbox only) */}
               {type === 'checkbox' && (
                 <Checkbox type={type} size={size} indeterminate onChange={() => {}} />
               )}
-              {/* Disabled unchecked */}
               <Checkbox type={type} size={size} disabled />
-              {/* Disabled checked */}
               <Checkbox type={type} size={size} checked disabled onChange={() => {}} />
-              {/* Disabled indeterminate (checkbox only) */}
               {type === 'checkbox' && (
                 <Checkbox type={type} size={size} indeterminate disabled onChange={() => {}} />
               )}
@@ -128,6 +158,37 @@ export const StateMatrix: Story = {
           ))}
         </div>
       ))}
+    </div>
+  ),
+};
+
+// ─── Full label-row matrix (size × type × checked × disabled) ───────────────
+
+export const LabelMatrix: Story = {
+  render: () => (
+    <div className="grid grid-cols-2 gap-x-8 gap-y-3 p-6 max-w-3xl">
+      {(['checkbox', 'radio'] as const).flatMap((type) =>
+        (type === 'radio' ? (['xs', 'sm', 'md'] as const) : (['sm', 'md'] as const)).flatMap((size) =>
+          [
+            <Checkbox
+              key={`${type}-${size}-default`}
+              type={type}
+              size={size}
+              label={`${type} • size ${size}`}
+              supportingText="Save my login details for next time."
+            />,
+            <Checkbox
+              key={`${type}-${size}-checked`}
+              type={type}
+              size={size}
+              checked
+              onChange={() => {}}
+              label={`${type} • size ${size} • checked`}
+              supportingText="Save my login details for next time."
+            />,
+          ],
+        ),
+      )}
     </div>
   ),
 };
@@ -145,11 +206,10 @@ export const DarkMode: Story = {
         <Checkbox {...args} checked disabled onChange={() => {}} />
         <Checkbox {...args} indeterminate disabled onChange={() => {}} />
       </div>
-      <div className="flex items-center gap-4">
-        <Checkbox {...args} type="radio" />
-        <Checkbox {...args} type="radio" checked onChange={() => {}} />
-        <Checkbox {...args} type="radio" disabled />
-        <Checkbox {...args} type="radio" checked disabled onChange={() => {}} />
+      <div className="flex flex-col gap-3 max-w-sm">
+        <Checkbox label="Remember me" supportingText="Save my login details for next time." />
+        <Checkbox checked onChange={() => {}} label="Remember me" supportingText="Save my login details for next time." />
+        <Checkbox type="radio" label="Remember me" supportingText="Save my login details for next time." />
       </div>
     </div>
   ),
