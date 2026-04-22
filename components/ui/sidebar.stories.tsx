@@ -10,60 +10,38 @@ const meta: Meta<typeof Sidebar> = {
   tags: ['autodocs'],
   parameters: {
     layout: 'fullscreen',
-    design: {
-      type: 'figma',
-      url: FIGMA_URL,
-    },
+    design: { type: 'figma', url: FIGMA_URL },
   },
   argTypes: {
     active: {
       control: 'select',
-      options: ['home', 'marketplace', 'create', 'clients'],
+      options: ['home', 'marketplace', 'create'],
     },
     userInitial: { control: 'text' },
   },
   args: {
     active: 'home',
-    userInitial: 'S',
+    userInitial: 'L',
   },
 };
 
 export default meta;
 type Story = StoryObj<typeof Sidebar>;
 
-// ─── Default ──────────────────────────────────────────────────────────────────
+// ─── Single-state stories ─────────────────────────────────────────────────────
 
-export const Default: Story = {
-  args: { active: 'home' },
-};
-
-// ─── Marketplace ─────────────────────────────────────────────────────────────
-
-export const Marketplace: Story = {
-  args: { active: 'marketplace' },
-};
-
-// ─── Create ──────────────────────────────────────────────────────────────────
-
-export const Create: Story = {
-  args: { active: 'create' },
-};
-
-// ─── Clients ─────────────────────────────────────────────────────────────────
-
-export const Clients: Story = {
-  args: { active: 'clients' },
-};
+export const Default:     Story = { args: { active: 'home' } };
+export const Marketplace: Story = { args: { active: 'marketplace' } };
+export const Create:      Story = { args: { active: 'create' } };
 
 // ─── All States ──────────────────────────────────────────────────────────────
 
 export const AllStates: Story = {
   render: () => (
     <div className="flex flex-row bg-bg-primary" style={{ height: '100vh' }}>
-      <Sidebar active="home"        userInitial="S" />
+      <Sidebar active="home"        userInitial="L" />
       <Sidebar active="marketplace" userInitial="M" />
-      <Sidebar active="create"      userInitial="C" />
-      <Sidebar active="clients"     userInitial="L" />
+      <Sidebar active="create"      userInitial="S" />
     </div>
   ),
 };
@@ -73,7 +51,7 @@ export const AllStates: Story = {
 export const DarkMode: Story = {
   render: () => (
     <div data-theme="dark" className="bg-bg-primary" style={{ height: '100vh', display: 'flex' }}>
-      <Sidebar active="home" userInitial="S" />
+      <Sidebar active="home" userInitial="L" />
     </div>
   ),
 };
