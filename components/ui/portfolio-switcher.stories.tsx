@@ -26,7 +26,7 @@ const PORTFOLIOS: Portfolio[] = [
   { id: 'all',       name: 'All Portfolios', avatar: <CircleAvatar bg="#e0e0e0" label="A" /> },
   { id: 'coinbase',  name: 'Coinbase',       avatar: <ImageAvatar src="brand-logos/brokers/coinbase.webp"  alt="Coinbase" /> },
   { id: 'robinhood', name: 'Robinhood',      avatar: <ImageAvatar src="brand-logos/brokers/robinhood.png"  alt="Robinhood" /> },
-  { id: 'surmount',  name: 'Surmount',       avatar: <ImageAvatar src="brand-logos/brokers/surmount.png"   alt="Surmount" /> },
+  { id: 'surmount',  name: 'Surmount',       avatar: <ImageAvatar src="brand-logos/brokers/surmount-icon.svg" alt="Surmount" /> },
 ];
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
