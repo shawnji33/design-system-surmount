@@ -6,8 +6,6 @@ const FIGMA_URL =
   'https://www.figma.com/design/vr9mgx3CwlKmdGujGIumRK/Surmount-Design-System?node-id=23404-2127';
 
 // ─── Avatar fixtures ──────────────────────────────────────────────────────────
-// Solid-colored circles stand in for real broker logos so stories don't depend
-// on remote image hosting. Replace with <img src=... /> in product code.
 
 function CircleAvatar({ bg, label }: { bg: string; label?: string }) {
   return (
@@ -20,11 +18,15 @@ function CircleAvatar({ bg, label }: { bg: string; label?: string }) {
   );
 }
 
+function ImageAvatar({ src, alt }: { src: string; alt: string }) {
+  return <img src={src} alt={alt} className="absolute inset-0 size-full object-cover" />;
+}
+
 const PORTFOLIOS: Portfolio[] = [
   { id: 'all',       name: 'All Portfolios', avatar: <CircleAvatar bg="#e0e0e0" label="A" /> },
   { id: 'coinbase',  name: 'Coinbase',       avatar: <CircleAvatar bg="#1652f0" label="C" /> },
-  { id: 'robinhood', name: 'Robinhood',      avatar: <CircleAvatar bg="#cdfb47" label="R" /> },
-  { id: 'surmount',  name: 'Surmount',       avatar: <CircleAvatar bg="#dde7ff" label="S" /> },
+  { id: 'robinhood', name: 'Robinhood',      avatar: <ImageAvatar src="avatars/broker-robinhood.png" alt="Robinhood" /> },
+  { id: 'surmount',  name: 'Surmount',       avatar: <ImageAvatar src="avatars/broker-surmount.png" alt="Surmount" /> },
 ];
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
