@@ -24,9 +24,9 @@ function ImageAvatar({ src, alt }: { src: string; alt: string }) {
 
 const PORTFOLIOS: Portfolio[] = [
   { id: 'all',       name: 'All Portfolios', avatar: <CircleAvatar bg="#e0e0e0" label="A" /> },
-  { id: 'coinbase',  name: 'Coinbase',       avatar: <CircleAvatar bg="#1652f0" label="C" /> },
-  { id: 'robinhood', name: 'Robinhood',      avatar: <ImageAvatar src="avatars/broker-robinhood.png" alt="Robinhood" /> },
-  { id: 'surmount',  name: 'Surmount',       avatar: <ImageAvatar src="avatars/broker-surmount.png" alt="Surmount" /> },
+  { id: 'coinbase',  name: 'Coinbase',       avatar: <ImageAvatar src="brand-logos/brokers/coinbase.webp"  alt="Coinbase" /> },
+  { id: 'robinhood', name: 'Robinhood',      avatar: <ImageAvatar src="brand-logos/brokers/robinhood.png"  alt="Robinhood" /> },
+  { id: 'surmount',  name: 'Surmount',       avatar: <ImageAvatar src="brand-logos/brokers/surmount.png"   alt="Surmount" /> },
 ];
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
