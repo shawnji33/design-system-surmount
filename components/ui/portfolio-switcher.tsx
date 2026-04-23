@@ -128,7 +128,7 @@ export function PortfolioSwitcher({
           className={cn(
             'absolute left-0 right-0 top-[calc(100%+var(--spacing-xs))] z-10',
             'rounded-xl border border-border-secondary bg-bg-primary shadow-card',
-            'py-sm flex flex-col gap-xxs min-w-max',
+            'py-sm flex flex-col gap-xxs',
           )}
         >
           {portfolios.map((p) => {
@@ -141,15 +141,14 @@ export function PortfolioSwitcher({
                 aria-selected={isSelected}
                 onClick={() => onSelect?.(p.id)}
                 className={cn(
-                  'flex items-center gap-md mx-sm rounded-sm p-md text-left',
+                  'flex items-center gap-md mx-sm rounded-sm p-md text-left min-w-0',
                   'font-body font-medium text-text-sm text-text-secondary-700',
-                  'whitespace-nowrap',
                   'hover:bg-bg-primary-hover transition-colors',
                   'focus-visible:outline-none focus-visible:bg-bg-primary-hover',
                 )}
               >
                 {p.avatar != null && <AvatarFrame>{p.avatar}</AvatarFrame>}
-                <span className="flex-1">{p.name}</span>
+                <span className="flex-1 min-w-0 truncate">{p.name}</span>
                 <span
                   className={cn(
                     'shrink-0 flex items-center justify-center size-xl ml-md',
@@ -168,9 +167,8 @@ export function PortfolioSwitcher({
               type="button"
               onClick={onAddAccount}
               className={cn(
-                'flex items-center gap-md mx-sm rounded-sm p-md text-left',
+                'flex items-center gap-md mx-sm rounded-sm p-md text-left min-w-0',
                 'font-body font-medium text-text-sm text-text-secondary-700',
-                'whitespace-nowrap',
                 'hover:bg-bg-primary-hover transition-colors',
                 'focus-visible:outline-none focus-visible:bg-bg-primary-hover',
               )}
