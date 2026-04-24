@@ -16,9 +16,10 @@ const button = cva(
   {
     variants: {
       variant: {
-        // Primary is a neutral dark gray (fg-secondary), not brand blue
+        // Primary is a near-black neutral (fg-primary-900), not brand blue.
+        // Hover uses fg-secondary-hover (#252b37 — same hex as Figma's utility-gray-800 alias).
         primary: [
-          'bg-fg-secondary-700 border-2 border-[var(--color-alpha-white-12)] text-text-white',
+          'bg-fg-primary-900 border-2 border-[var(--color-alpha-white-12)] text-text-white',
           'hover:bg-fg-secondary-hover',
           'disabled:bg-fg-disabled disabled:border disabled:border-border-disabled-subtle disabled:text-fg-disabled-subtle',
         ],
