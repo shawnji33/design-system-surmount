@@ -16,22 +16,18 @@ const button = cva(
   {
     variants: {
       variant: {
-        // Fix #8: border uses alpha-white-12 (0.12) not alpha-white-10 (0.098)
+        // Primary is a neutral dark gray (fg-secondary), not brand blue
         primary: [
-          'bg-bg-brand-solid border-2 border-[var(--color-alpha-white-12)] text-text-white',
-          'hover:bg-bg-brand-solid-hover',
-          'disabled:bg-bg-disabled disabled:border disabled:border-border-disabled-subtle disabled:text-fg-disabled',
+          'bg-fg-secondary-700 border-2 border-[var(--color-alpha-white-12)] text-text-white',
+          'hover:bg-fg-secondary-hover',
+          'disabled:bg-fg-disabled disabled:border disabled:border-border-disabled-subtle disabled:text-fg-disabled-subtle',
         ],
-        // Fix #9: disabled keeps bg-primary (white), not bg-disabled
-        // Fix #11: focused shows bg-secondary
         secondary: [
           'bg-bg-primary border border-border-primary text-text-secondary-700',
           'hover:bg-bg-primary-hover hover:text-text-secondary-hover',
           'focus-visible:bg-bg-secondary',
           'disabled:border-border-disabled-subtle disabled:text-fg-disabled',
         ],
-        // Fix #10: disabled stays transparent (no bg)
-        // Fix #12: focused shows bg-secondary
         tertiary: [
           'bg-transparent text-text-tertiary-600',
           'hover:bg-bg-primary-hover hover:text-text-tertiary-hover',
@@ -50,14 +46,10 @@ const button = cva(
         ],
       },
       size: {
-        // Fix #1: xs px 8→10px (px-2-5)
         xs: 'px-2-5 py-md gap-xs text-text-xs',
         sm: 'px-lg py-md gap-xs text-text-sm',
-        // Fix #2,#4: md px 16→14px (px-3-5), py 8→10px (py-2-5)
         md: 'px-3-5 py-2-5 gap-xs text-text-sm',
-        // Fix #5: lg py 12→10px (py-2-5)
         lg: 'px-xl py-2-5 gap-sm text-text-md',
-        // Fix #3: xl px 20→18px (px-4-5)
         xl: 'px-4-5 py-lg gap-sm text-text-md',
       },
       iconOnly: {
@@ -66,12 +58,13 @@ const button = cva(
       },
     },
     compoundVariants: [
-      // Icon-only: symmetric (square) padding per size
+      // Icon-only: symmetric padding per size (sm=8, md=10, lg=12, xl=14).
+      // xs × iconOnly is deprecated in Figma; keep as a runtime fallback.
       { iconOnly: true, size: 'xs', class: 'px-md py-md' },
       { iconOnly: true, size: 'sm', class: 'px-md py-md' },
-      { iconOnly: true, size: 'md', class: 'px-md py-md' },
+      { iconOnly: true, size: 'md', class: 'p-2-5' },
       { iconOnly: true, size: 'lg', class: 'px-lg py-lg' },
-      { iconOnly: true, size: 'xl', class: 'px-lg py-lg' },
+      { iconOnly: true, size: 'xl', class: 'p-3-5' },
       // Link variants: strip padding, remove radius, allow overflow
       { variant: 'link-color', class: 'px-0 py-0 rounded-none overflow-visible' },
       { variant: 'link-gray',  class: 'px-0 py-0 rounded-none overflow-visible' },
@@ -84,18 +77,27 @@ const button = cva(
   },
 );
 
-// Fix #6: xs icon 12→14px (size-3-5)
-// Fix #7: md icon 20→18px (size-4-5)
+// Inline icons size to match the text cap-height of each size step.
 const iconSizeClass: Record<NonNullable<ButtonVariants['size']>, string> = {
   xs: 'size-3-5',  // 14px
-  sm: 'size-xl',   // 16px — exact
+  sm: 'size-xl',   // 16px
   md: 'size-4-5',  // 18px
-  lg: 'size-2xl',  // 20px — exact
-  xl: 'size-2xl',  // 20px — exact
+  lg: 'size-2xl',  // 20px
+  xl: 'size-2xl',  // 20px
 };
 
-// Fix #13,#14: padded variants use a larger spinner (Figma "Button loading icon")
-// xs/sm/md → 20px, lg/xl → 24px; link variants use iconSizeClass instead
+// Icon-only icons are uniformly 20px for sm/md/lg/xl in Figma — larger than
+// the inline size at sm (16) and md (18). xs has no Figma coverage.
+const iconOnlyIconSizeClass: Record<NonNullable<ButtonVariants['size']>, string> = {
+  xs: 'size-3-5',  // fallback — no Figma coverage
+  sm: 'size-2xl',
+  md: 'size-2xl',
+  lg: 'size-2xl',
+  xl: 'size-2xl',
+};
+
+// Loading spinner: padded variants use the "Button loading icon" size (20/24),
+// link variants reuse the inline-icon table since they have no padding.
 const paddedSpinnerSizeClass: Record<NonNullable<ButtonVariants['size']>, string> = {
   xs: 'size-2xl',  // 20px
   sm: 'size-2xl',  // 20px
@@ -137,7 +139,7 @@ export type ButtonProps = {
 } & Omit<ComponentPropsWithoutRef<'button'>, 'children'>;
 
 const loadingBgClass: Partial<Record<NonNullable<ButtonVariants['variant']>, string>> = {
-  primary:   'bg-bg-brand-solid-hover',
+  primary:   'bg-fg-secondary-hover',
   secondary: 'bg-bg-primary-hover',
   tertiary:  'bg-bg-primary-hover',
 };
@@ -158,9 +160,9 @@ export function Button({
   const Comp = asChild ? Slot : 'button';
   const sz = size ?? 'md';
   const vr = variant ?? 'primary';
-  // Fix #15: link variants get icon-sized spinner; padded variants get the larger spinner
   const isLink = vr === 'link-color' || vr === 'link-gray';
   const spinnerClass = isLink ? iconSizeClass[sz] : paddedSpinnerSizeClass[sz];
+  const renderedIconSize = iconOnly ? iconOnlyIconSizeClass[sz] : iconSizeClass[sz];
 
   return (
     <Comp
@@ -183,7 +185,7 @@ export function Button({
         </>
       ) : iconOnly ? (
         <span
-          className={cn('shrink-0 flex items-center justify-center', iconSizeClass[sz])}
+          className={cn('shrink-0 flex items-center justify-center', renderedIconSize)}
           aria-hidden="true"
         >
           {iconLeading ?? children}
@@ -192,7 +194,7 @@ export function Button({
         <>
           {iconLeading != null && (
             <span
-              className={cn('shrink-0 flex items-center justify-center', iconSizeClass[sz])}
+              className={cn('shrink-0 flex items-center justify-center', renderedIconSize)}
               aria-hidden="true"
             >
               {iconLeading}
@@ -203,7 +205,7 @@ export function Button({
           )}
           {iconTrailing != null && (
             <span
-              className={cn('shrink-0 flex items-center justify-center', iconSizeClass[sz])}
+              className={cn('shrink-0 flex items-center justify-center', renderedIconSize)}
               aria-hidden="true"
             >
               {iconTrailing}

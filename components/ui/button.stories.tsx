@@ -16,7 +16,7 @@ const Icon = () => (
   </svg>
 );
 
-const FIGMA_URL = 'https://www.figma.com/design/vr9mgx3CwlKmdGujGIumRK/Surmount-Design-System?node-id=23487-11641';
+const FIGMA_URL = 'https://www.figma.com/design/vr9mgx3CwlKmdGujGIumRK/Surmount-Design-System?node-id=3287-427074';
 
 const meta: Meta<typeof Button> = {
   title: 'UI/Button',
@@ -75,6 +75,18 @@ export const Disabled: Story = {
 
 export const IconOnly: Story = {
   args: { iconOnly: true, iconLeading: <Icon /> },
+};
+
+// Icon-only padding varies per size in Figma (sm=8, md=10, lg=12, xl=14) and
+// the icon itself is 20px for every step. xs is omitted — no Figma coverage.
+export const IconOnlyAllSizes: Story = {
+  render: (args) => (
+    <div className="flex flex-wrap items-center gap-3 p-4">
+      {(['sm', 'md', 'lg', 'xl'] as const).map((size) => (
+        <Button key={size} {...args} size={size} iconOnly iconLeading={<Icon />} />
+      ))}
+    </div>
+  ),
 };
 
 // ─── All variants ────────────────────────────────────────────────────────────
