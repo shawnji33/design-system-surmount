@@ -98,7 +98,8 @@ const config: Config = {
     "disabled-subtle": "var(--color-border-disabled-subtle)",
     "tertiary": "var(--color-border-tertiary)",
     "brand-alt": "var(--color-border-brand-alt)",
-    "secondary-alt": "var(--color-border-secondary-alt)"
+    "secondary-alt": "var(--color-border-secondary-alt)",
+    "focus": "var(--color-border-focus)"
   },
   "brand": {
     "50": "var(--color-utility-brand-50)",
