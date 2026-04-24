@@ -184,7 +184,8 @@ const config: Config = {
     "700": "var(--color-utility-yellow-700)"
   },
   "focus-ring": "var(--focus-ring)",
-  "focus-ring-error": "var(--focus-ring-error)"
+  "focus-ring-error": "var(--focus-ring-error)",
+  "focus-ring-subtle": "var(--focus-ring-subtle)"
 },
 
       spacing: {
