@@ -28,8 +28,8 @@ const control = cva(
   [
     'relative inline-flex shrink-0 items-center justify-center overflow-hidden',
     'border transition-colors cursor-pointer',
-    // Double focus ring via the hidden input's :focus-visible
-    'has-[:focus-visible]:shadow-[0_0_0_2px_var(--color-bg-primary),0_0_0_4px_var(--focus-ring)]',
+    // Double focus ring via the hidden input's :focus-visible (form-control family: 3px × subtle)
+    'has-[:focus-visible]:shadow-[0_0_0_2px_var(--color-bg-primary),0_0_0_3px_var(--focus-ring-subtle)]',
     'has-[:disabled]:cursor-not-allowed',
   ],
   {
@@ -135,7 +135,7 @@ export function Checkbox({
         disabled
           ? 'bg-bg-disabled-subtle border-border-disabled'
           : isActive
-          ? 'bg-bg-brand-solid border-0'
+          ? 'bg-fg-primary-900 border-0'
           : 'border-border-primary',
         // Only apply consumer className to the bare control when there's no label;
         // when wrapped in a label, the className goes on the <label> wrapper instead.
