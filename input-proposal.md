@@ -117,13 +117,13 @@ Letter-spacing `0` across the board (Figma variable defs confirm this for `text-
 
 ---
 
-## Group composition (stretch scope — call out, don't implement yet)
+## Group composition
 
-Two places we've already built an "Input Group":
-- Phone step: country-code + number, side by side
-- Address step: street + apt/unit stacked in one rounded shell
+Shipped as `InputGroup` (`components/ui/input-group.tsx`). Outer bordered shell with `focus-within` ring (`--focus-ring-subtle`) that lights up when any nested control is focused. Props: `label`, `helperText`, `error`, `errorText`, any children. Matches the address-step pattern from the B2C prototypes.
 
-Proposed: an `InputGroup` component that wraps N Input children and owns the focus-within treatment on the outer shell. Not in scope for Pass 2. Call this out so we don't accidentally build Input in a way that blocks the group.
+## Related components already in the DS
+
+- **Checkbox** (`components/ui/checkbox.tsx`) — already exists with xs/sm/md sizes, radio variant, indeterminate, supporting text. **⚠️ Drift:** the checked-state bg is still `bg-bg-brand-solid` (blue) — pre-dates the neutral Primary Button update. Future audit should propose updating it to `bg-fg-primary-900` for visual consistency with Button. Not touching in this PR.
 
 ---
 
