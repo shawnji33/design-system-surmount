@@ -332,7 +332,7 @@
   --color-utility-success-300: #a2d3a5;
   --color-utility-purple-300: #bcb4fd;
   --color-avatar-bg-neutral: #e0e0e0;
-  --focus-ring: #5585dc;
+  --focus-ring: #0a0d1226;
   --focus-ring-error: #cb6f68;
   --color-border-brand-alt: #406ad0;
   --color-toggle-border: #d5d6d9;
@@ -621,6 +621,7 @@
   --color-utility-orange-200: #932f18;
   --color-utility-blue-600: #53b0fd;
   --shadow-card: #ffffff00;
+  --focus-ring: #ffffff40;
 }
 
 /* ─── Spacing ───────────────────────────────────────────────────────────────── */
