@@ -359,4 +359,26 @@
 
   /* ── Shadows ── */
   --shadow-card: 0px 2px 12px 0px var(--shadow-card);
+
+  /* ── UUI v8 base token aliases ────────────────────────────────────────────
+     Maps Untitled UI component token names to Surmount CSS vars so that
+     components added via `npx untitledui add` work out-of-the-box.
+     ─────────────────────────────────────────────────────────────────────── */
+  --color-primary: var(--color-bg-primary);
+  --color-primary_hover: var(--color-bg-primary-hover);
+  --color-tertiary: var(--color-bg-tertiary);
+  --color-secondary: var(--color-fg-secondary-700);
+  --color-secondary_hover: var(--color-fg-secondary-hover);
+  --color-quaternary: var(--color-fg-quaternary-400);
+  --color-secondary_alt: var(--color-border-secondary-alt);
+  --color-brand-solid: var(--color-bg-brand-solid);
+  --color-brand-solid_hover: var(--color-bg-brand-solid-hover);
+  --color-toggle-border: var(--color-toggle-border);
+  --color-toggle-slim-border_pressed: var(--color-toggle-slim-border-pressed);
+  --color-toggle-slim-border_pressed-hover: var(--color-toggle-slim-border-pressed-hover);
+  --color-fg-quaternary_hover: var(--color-fg-quaternary-hover);
+  --color-fg-tertiary_hover: var(--color-fg-tertiary-hover);
+  --color-primary-25: var(--color-brand-25);
+  --color-utility-blue-500: var(--color-utility-blue-500);
+  --color-tooltip-supporting-text: var(--color-tooltip-supporting-text);
 }
