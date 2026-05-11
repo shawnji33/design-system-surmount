@@ -1,9 +1,15 @@
 'use client';
 
-import { Slot } from '@radix-ui/react-slot';
 import { cva, type VariantProps } from 'class-variance-authority';
-import { type ComponentPropsWithoutRef, type ReactNode } from 'react';
+import { Children, cloneElement, isValidElement, type ComponentPropsWithoutRef, type ReactNode } from 'react';
 import { cn } from '@/lib/utils';
+
+function Slot({ children, ...props }: ComponentPropsWithoutRef<'button'> & { children?: ReactNode }) {
+  if (isValidElement(children)) {
+    return cloneElement(children, { ...props, ...(children.props as object) } as object);
+  }
+  return <>{children}</>;
+}
 
 const button = cva(
   [
