@@ -366,6 +366,7 @@
      ─────────────────────────────────────────────────────────────────────── */
   --color-primary: var(--color-bg-primary);
   --color-primary_hover: var(--color-bg-primary-hover);
+  --color-primary-solid: var(--color-bg-primary-solid);
   --color-tertiary: var(--color-bg-tertiary);
   --color-secondary: var(--color-fg-secondary-700);
   --color-secondary_hover: var(--color-fg-secondary-hover);
