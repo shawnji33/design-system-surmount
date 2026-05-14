@@ -105,7 +105,36 @@ Figma token keys are transformed to CSS custom properties by:
 
 ---
 
-## 6. Working on this repo
+## 6. Micro-interaction Scale (Emil Kowalski — animations.dev)
+
+Apply to every animation in this design system.
+
+| Element | Duration | Easing |
+|---|---|---|
+| Button press / hover color | 100–160ms | `ease` |
+| Tooltips, small popovers | 125–200ms | ease-out |
+| Toasts, dropdowns | 150–300ms | ease-out enter / ease-in-out exit |
+| Modals, drawers | 200–500ms | ease-out enter |
+| Hard UI cap | 300ms | — |
+
+**Easing shortcuts:**
+- Enter (appearing): `cubic-bezier(0.23, 1, 0.32, 1)` — strong ease-out
+- Move / exit: `cubic-bezier(0.77, 0, 0.175, 1)` — strong ease-in-out
+- **Never use `ease-in`** — delays start, feels sluggish
+
+**Transforms:**
+- Button `:active`: `scale(0.97–0.98)`
+- Appearing element: start `scale(0.95)` with opacity
+- Toast enter: `translateX(calc(100% + 24px)) → translateX(0)`
+- Toast exit: `translateY(0) → translateY(-120%)` + opacity 0
+
+**Exit animations in React:** Add `isLeaving` state → apply exit CSS class → clear from DOM after exit duration. Never unmount instantly when an exit animation is defined.
+
+**`@media (prefers-reduced-motion: reduce)`:** keep opacity/color transitions; strip transform motion.
+
+---
+
+## 7. Working on this repo
 
 > **Auto commit + push every change.** This repo deploys Storybook to `shawnji.github.io` on push to `main` — leaving uncommitted edits in the working tree means the deployed Storybook is out of sync with the source.
 
