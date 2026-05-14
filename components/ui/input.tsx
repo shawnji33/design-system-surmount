@@ -183,7 +183,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
       <label className={shell({ size: resolvedSize, error, disabled })} htmlFor={id}>
         {iconLeading != null && (
           <span
-            className="shrink-0 flex items-center justify-center w-2xl h-2xl text-fg-tertiary-600"
+            className="inline-flex shrink-0 items-center justify-center size-2xl text-fg-tertiary-600"
             aria-hidden="true"
           >
             {iconLeading}
@@ -230,10 +230,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
           />
         </div>
         {iconTrailing != null && (
-          <span
-            className="shrink-0 flex items-center justify-center w-2xl h-2xl text-fg-tertiary-600"
-            aria-hidden="true"
-          >
+          <span className="inline-flex shrink-0 items-center justify-center size-2xl text-fg-tertiary-600">
             {iconTrailing}
           </span>
         )}

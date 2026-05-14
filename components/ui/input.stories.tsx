@@ -3,39 +3,25 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { Input } from './input';
 
 const MailIcon = () => (
-  <svg
-    width="100%"
-    height="100%"
-    viewBox="0 0 256 256"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-    aria-hidden="true"
-  >
-    <rect x="32" y="48" width="192" height="160" rx="8" stroke="currentColor" strokeWidth="16" strokeLinecap="round" strokeLinejoin="round" />
-    <path d="M224 56l-96 88L32 56" stroke="currentColor" strokeWidth="16" strokeLinecap="round" strokeLinejoin="round" />
+  <svg viewBox="0 0 256 256" fill="none" stroke="currentColor" strokeWidth="16" strokeLinecap="round" strokeLinejoin="round" className="size-2xl" aria-hidden="true">
+    <rect x="32" y="48" width="192" height="160" rx="8" />
+    <polyline points="224 56 128 144 32 56" />
   </svg>
 );
 
 const SearchIcon = () => (
-  <svg
-    width="100%"
-    height="100%"
-    viewBox="0 0 256 256"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-    aria-hidden="true"
-  >
-    <circle cx="112" cy="112" r="80" stroke="currentColor" strokeWidth="16" />
-    <line x1="168.57" y1="168.57" x2="224" y2="224" stroke="currentColor" strokeWidth="16" strokeLinecap="round" strokeLinejoin="round" />
+  <svg viewBox="0 0 256 256" fill="none" stroke="currentColor" strokeWidth="16" strokeLinecap="round" strokeLinejoin="round" className="size-2xl" aria-hidden="true">
+    <circle cx="112" cy="112" r="80" />
+    <line x1="168.57" y1="168.57" x2="224" y2="224" />
   </svg>
 );
 
 const CalendarIcon = () => (
-  <svg width="100%" height="100%" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-    <rect x="40" y="40" width="176" height="176" rx="8" stroke="currentColor" strokeWidth="16" strokeLinecap="round" strokeLinejoin="round" />
-    <line x1="176" y1="24" x2="176" y2="56" stroke="currentColor" strokeWidth="16" strokeLinecap="round" />
-    <line x1="80" y1="24" x2="80" y2="56" stroke="currentColor" strokeWidth="16" strokeLinecap="round" />
-    <line x1="40" y1="88" x2="216" y2="88" stroke="currentColor" strokeWidth="16" strokeLinecap="round" />
+  <svg viewBox="0 0 256 256" fill="none" stroke="currentColor" strokeWidth="16" strokeLinecap="round" strokeLinejoin="round" className="size-2xl" aria-hidden="true">
+    <rect x="40" y="40" width="176" height="176" rx="8" />
+    <line x1="176" y1="24" x2="176" y2="56" />
+    <line x1="80" y1="24" x2="80" y2="56" />
+    <line x1="40" y1="88" x2="216" y2="88" />
   </svg>
 );
 
