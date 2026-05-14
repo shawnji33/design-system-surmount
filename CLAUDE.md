@@ -82,17 +82,18 @@ Figma token keys are transformed to CSS custom properties by:
 | Sidebar | `sidebar.tsx` | nav primitive |
 | Table | `table.tsx` | row/header primitives |
 | Tabs | `tabs.tsx` | sizes × selection |
-| **TextInput** | `text-input.tsx` | resting / focused / filled / invalid / disabled, sm/md/lg, leading + trailing icons |
+| **Input** | `input.tsx` | resting / focused / filled / error / disabled, sm/md/lg, floating label, leading + trailing icons |
 | Toggle | `toggle.tsx` | sizes × on/off × disabled |
 
 ### Input field principles (Carbon-aligned)
 
-- `invalid={true}` + `errorText="…"` is the only way to enter the error state. The error message **takes precedence** over `helperText` — never show both at once.
-- Error visuals: `border-border-error` (`#cb6f68`), 3px focus ring at `rgba(203,111,104,0.18)`, `text-text-error-primary-600` (`#b6544c`) for the message + a circle-i icon.
-- The error message is announced to assistive tech via `role="alert"` and `aria-live="polite"`. The input gets `aria-invalid="true"` and `aria-describedby` pointing at the error message id.
-- **Disabled** is non-interactive: bg is `bg-bg-disabled-subtle`, cursor is `not-allowed`, `pointer-events:none` on consumer-side CTAs.
-- Helper text is suppressed in the invalid state — the error message replaces it.
+- `error={true}` + `errorText="…"` is the only way to enter the error state. The error message **takes precedence** over `helperText` — never show both at once.
+- Error visuals: `border-border-error` (`#cb6f68`), 3px focus ring at `rgba(203,111,104,0.18)`, `text-fg-error-primary` for the message + a circle-i warning icon.
+- The error message is announced to assistive tech via `role="alert"`. The input gets `aria-invalid="true"` and `aria-describedby` pointing at the message id.
+- **Disabled** is non-interactive: bg is `bg-bg-disabled`, border is `border-border-disabled-subtle`, cursor is `not-allowed`.
+- Helper text is suppressed in the error state — the error message replaces it.
 - Validation should not flash red while a user is mid-typing. Run inline validation only when input is "complete enough" (e.g. all 8 digits of a date), and unconditionally on `blur`.
+- The `iconTrailing` slot is NOT `aria-hidden` — it can receive interactive elements (e.g. a password-reveal button). Pass `aria-hidden="true"` on the icon itself if it is purely decorative.
 
 ### Date picker specifics
 

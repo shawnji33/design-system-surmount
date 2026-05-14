@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { Input } from './input';
 
@@ -10,24 +11,8 @@ const MailIcon = () => (
     xmlns="http://www.w3.org/2000/svg"
     aria-hidden="true"
   >
-    <rect
-      x="32"
-      y="48"
-      width="192"
-      height="160"
-      rx="8"
-      stroke="currentColor"
-      strokeWidth="16"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-    <path
-      d="M224 56l-96 88L32 56"
-      stroke="currentColor"
-      strokeWidth="16"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
+    <rect x="32" y="48" width="192" height="160" rx="8" stroke="currentColor" strokeWidth="16" strokeLinecap="round" strokeLinejoin="round" />
+    <path d="M224 56l-96 88L32 56" stroke="currentColor" strokeWidth="16" strokeLinecap="round" strokeLinejoin="round" />
   </svg>
 );
 
@@ -41,16 +26,16 @@ const SearchIcon = () => (
     aria-hidden="true"
   >
     <circle cx="112" cy="112" r="80" stroke="currentColor" strokeWidth="16" />
-    <line
-      x1="168.57"
-      y1="168.57"
-      x2="224"
-      y2="224"
-      stroke="currentColor"
-      strokeWidth="16"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
+    <line x1="168.57" y1="168.57" x2="224" y2="224" stroke="currentColor" strokeWidth="16" strokeLinecap="round" strokeLinejoin="round" />
+  </svg>
+);
+
+const CalendarIcon = () => (
+  <svg width="100%" height="100%" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <rect x="40" y="40" width="176" height="176" rx="8" stroke="currentColor" strokeWidth="16" strokeLinecap="round" strokeLinejoin="round" />
+    <line x1="176" y1="24" x2="176" y2="56" stroke="currentColor" strokeWidth="16" strokeLinecap="round" />
+    <line x1="80" y1="24" x2="80" y2="56" stroke="currentColor" strokeWidth="16" strokeLinecap="round" />
+    <line x1="40" y1="88" x2="216" y2="88" stroke="currentColor" strokeWidth="16" strokeLinecap="round" />
   </svg>
 );
 
@@ -63,15 +48,27 @@ const meta: Meta<typeof Input> = {
   tags: ['autodocs'],
   parameters: {
     design: { type: 'figma', url: FIGMA_URL },
+    docs: {
+      description: {
+        component:
+          'Floating-label input with helper text, error state, and optional leading/trailing icons. ' +
+          'The label animates from resting (vertically centred) to floated (top) on focus or when the field has a value. ' +
+          'Error state takes precedence over helper text; the error message is announced via `role="alert"`. ' +
+          'Follows Carbon Design System input principles.',
+      },
+    },
   },
   argTypes: {
     size: { control: 'select', options: ['sm', 'md', 'lg'] },
     disabled: { control: 'boolean' },
     error: { control: 'boolean' },
+    label: { control: 'text' },
+    placeholder: { control: 'text' },
+    helperText: { control: 'text' },
+    errorText: { control: 'text' },
   },
   args: {
     label: 'Email',
-    placeholder: 'you@surmount.com',
     size: 'md',
     disabled: false,
     error: false,
@@ -86,8 +83,10 @@ type Story = StoryObj<typeof Input>;
 export const Default: Story = {};
 
 export const NoLabel: Story = {
-  args: { label: undefined, placeholder: 'Search' },
+  args: { label: undefined, placeholder: 'Search…' },
 };
+
+// ─── State stories ───────────────────────────────────────────────────────────
 
 export const WithHelperText: Story = {
   args: {
@@ -95,10 +94,9 @@ export const WithHelperText: Story = {
   },
 };
 
-export const WithIcons: Story = {
+export const Filled: Story = {
   args: {
-    iconLeading: <MailIcon />,
-    iconTrailing: <SearchIcon />,
+    defaultValue: 'you@surmount.com',
   },
 };
 
@@ -110,20 +108,51 @@ export const Error: Story = {
   },
 };
 
+export const ErrorEmpty: Story = {
+  args: {
+    error: true,
+    errorText: 'This field is required.',
+  },
+};
+
 export const Disabled: Story = {
+  args: {
+    disabled: true,
+    placeholder: 'Unavailable',
+  },
+};
+
+export const DisabledFilled: Story = {
   args: {
     disabled: true,
     defaultValue: 'you@surmount.com',
   },
 };
 
-export const Filled: Story = {
+// ─── Icon slots ──────────────────────────────────────────────────────────────
+
+export const WithLeadingIcon: Story = {
   args: {
-    defaultValue: 'you@surmount.com',
+    iconLeading: <MailIcon />,
   },
 };
 
-// ─── All sizes ───────────────────────────────────────────────────────────────
+export const WithTrailingIcon: Story = {
+  args: {
+    label: 'Date of birth',
+    placeholder: 'MM / DD / YYYY',
+    iconTrailing: <CalendarIcon />,
+  },
+};
+
+export const WithBothIcons: Story = {
+  args: {
+    iconLeading: <MailIcon />,
+    iconTrailing: <SearchIcon />,
+  },
+};
+
+// ─── Sizes ───────────────────────────────────────────────────────────────────
 
 export const AllSizes: Story = {
   render: (args) => (
@@ -135,17 +164,47 @@ export const AllSizes: Story = {
   ),
 };
 
-// ─── States matrix ───────────────────────────────────────────────────────────
+// ─── Live validation ─────────────────────────────────────────────────────────
+
+export const LiveValidation: Story = {
+  render: () => {
+    const Comp = () => {
+      const [value, setValue] = useState('');
+      const isValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+      const showError = value.length > 0 && !isValid;
+      return (
+        <div className="max-w-md p-4">
+          <Input
+            label="Email address"
+            placeholder="you@example.com"
+            value={value}
+            onChange={(e) => setValue(e.target.value)}
+            error={showError}
+            errorText={showError ? 'Enter a valid email address.' : undefined}
+            helperText={!showError ? "We'll never share your email." : undefined}
+          />
+        </div>
+      );
+    };
+    return <Comp />;
+  },
+};
+
+// ─── State matrix ─────────────────────────────────────────────────────────────
 
 export const StateMatrix: Story = {
   render: () => (
-    <div className="grid grid-cols-2 gap-4 p-4 max-w-3xl">
-      <Input label="Default" placeholder="Placeholder" />
-      <Input label="Filled" defaultValue="Hello world" />
-      <Input label="With helper" placeholder="Placeholder" helperText="This is helper text." />
-      <Input label="Error" error errorText="Something is wrong" defaultValue="bad value" />
-      <Input label="Disabled" disabled placeholder="Can't type" />
-      <Input label="With icons" iconLeading={<MailIcon />} iconTrailing={<SearchIcon />} placeholder="Search" />
+    <div className="grid grid-cols-2 gap-x-8 gap-y-6 p-6 max-w-3xl">
+      <Input label="Default" placeholder="Type something…" />
+      <Input label="With helper" placeholder="Type something…" helperText="Helper text below." />
+      <Input label="Filled" defaultValue="Shawn Ji" />
+      <Input label="Disabled" disabled placeholder="Disabled" />
+      <Input label="Disabled filled" disabled defaultValue="Locked value" />
+      <Input label="Error" error errorText="Enter a valid email address." defaultValue="not-an-email" />
+      <Input label="Error (empty)" error errorText="This field is required." />
+      <Input label="Date of birth" placeholder="MM / DD / YYYY" iconTrailing={<CalendarIcon />} />
+      <Input label="With leading icon" iconLeading={<MailIcon />} placeholder="you@example.com" />
+      <Input label="No label" placeholder="Search…" />
     </div>
   ),
 };
@@ -155,10 +214,10 @@ export const StateMatrix: Story = {
 export const DarkMode: Story = {
   render: () => (
     <div data-theme="dark" className="bg-bg-primary p-6 space-y-4 max-w-md">
-      <Input label="Default" placeholder="Placeholder" />
-      <Input label="Filled" defaultValue="Hello world" />
-      <Input label="Error" error errorText="Something is wrong" defaultValue="bad" />
-      <Input label="Disabled" disabled defaultValue="Disabled" />
+      <Input label="Default" />
+      <Input label="Filled" defaultValue="Shawn Ji" />
+      <Input label="Error" error errorText="Enter a valid email address." defaultValue="bad" />
+      <Input label="Disabled filled" disabled defaultValue="Disabled" />
     </div>
   ),
 };

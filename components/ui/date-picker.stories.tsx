@@ -10,7 +10,7 @@ const meta: Meta<typeof DatePicker> = {
     docs: {
       description: {
         component:
-          'Date picker built on top of `TextInput`. Click the field to open the calendar. ' +
+          'Date picker built on top of `Input`. Click the field to open the calendar. ' +
           'Type `MM/DD/YYYY` (auto-masked from raw digits) and the calendar tracks. ' +
           'Pre-built validation: invalid format, future date, year < 1900. ' +
           'Pass a custom `validate` to enforce additional rules (e.g. minimum age).',

@@ -13,7 +13,7 @@ import {
   type ReactNode,
 } from 'react';
 import { cn } from '@/lib/utils';
-import { TextInput, type TextInputSize } from './text-input';
+import { Input, type InputSize } from './input';
 
 // ─── Phosphor caret + calendar icons ─────────────────────────────────────────
 const CaretLeft = ({ className }: { className?: string }) => (
@@ -111,7 +111,7 @@ export type DatePickerProps = {
   /** Initial calendar view month/year when the field is empty. */
   defaultViewYear?: number;
   defaultViewMonth?: number;
-  size?: TextInputSize;
+  size?: InputSize;
   disabled?: boolean;
   id?: string;
   name?: string;
@@ -300,7 +300,7 @@ export const DatePicker = forwardRef<DatePickerHandle, DatePickerProps>(function
 
   return (
     <div ref={wrapRef} className={cn('relative w-full font-body', className)}>
-      <TextInput
+      <Input
         ref={inputRef}
         id={fieldId}
         name={name}
@@ -309,7 +309,7 @@ export const DatePicker = forwardRef<DatePickerHandle, DatePickerProps>(function
         placeholder={placeholder}
         helperText={helperText}
         errorText={errorText ?? undefined}
-        invalid={isInvalid}
+        error={isInvalid}
         disabled={disabled}
         autoComplete="bday"
         inputMode="numeric"
@@ -318,7 +318,7 @@ export const DatePicker = forwardRef<DatePickerHandle, DatePickerProps>(function
         onBlur={handleBlur}
         onFocus={() => !disabled && setOpen(true)}
         onClick={() => !disabled && setOpen(true)}
-        trailingIcon={<CalendarIcon className="size-2xl" />}
+        iconTrailing={<CalendarIcon className="size-2xl" />}
       />
 
       <div
