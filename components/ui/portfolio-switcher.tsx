@@ -126,8 +126,9 @@ export function PortfolioSwitcher({
           role="listbox"
           aria-label="Portfolios"
           className={cn(
-            'absolute left-0 right-0 top-[calc(100%+var(--spacing-xs))] z-10',
-            'rounded-xl border border-border-secondary bg-bg-primary shadow-card',
+            'absolute left-0 top-[calc(100%+var(--spacing-xs))] z-10',
+            'min-w-full w-max',
+            'rounded-xl border border-border-secondary bg-bg-primary shadow-lg',
             'py-sm flex flex-col gap-xxs',
           )}
         >
@@ -141,7 +142,7 @@ export function PortfolioSwitcher({
                 aria-selected={isSelected}
                 onClick={() => onSelect?.(p.id)}
                 className={cn(
-                  'flex items-center gap-md mx-sm rounded-sm p-md text-left min-w-0',
+                  'flex items-center gap-md mx-sm rounded-sm px-md py-[10px] text-left min-w-0',
                   'font-body font-medium text-text-sm text-text-secondary-700',
                   'hover:bg-bg-primary-hover transition-colors',
                   'focus-visible:outline-none focus-visible:bg-bg-primary-hover',
@@ -151,7 +152,7 @@ export function PortfolioSwitcher({
                 <span className="flex-1 min-w-0 truncate">{p.name}</span>
                 <span
                   className={cn(
-                    'shrink-0 flex items-center justify-center size-xl ml-md',
+                    'shrink-0 flex items-center justify-center size-xl ml-2xl',
                     !isSelected && 'invisible',
                   )}
                   aria-hidden="true"
@@ -163,21 +164,24 @@ export function PortfolioSwitcher({
           })}
 
           {onAddAccount != null && (
-            <button
-              type="button"
-              onClick={onAddAccount}
-              className={cn(
-                'flex items-center gap-md mx-sm rounded-sm p-md text-left min-w-0',
-                'font-body font-medium text-text-sm text-text-secondary-700',
-                'hover:bg-bg-primary-hover transition-colors',
-                'focus-visible:outline-none focus-visible:bg-bg-primary-hover',
-              )}
-            >
-              <span className="shrink-0 flex items-center justify-center size-2xl" aria-hidden="true">
-                <PlusCircleIcon className="w-full h-full" />
-              </span>
-              <span>Add accounts</span>
-            </button>
+            <>
+              <hr className="mx-sm my-xs border-border-secondary" />
+              <button
+                type="button"
+                onClick={onAddAccount}
+                className={cn(
+                  'flex items-center gap-md mx-sm rounded-sm px-md py-[10px] text-left min-w-0',
+                  'font-body font-medium text-text-sm text-text-secondary-700',
+                  'hover:bg-bg-primary-hover transition-colors',
+                  'focus-visible:outline-none focus-visible:bg-bg-primary-hover',
+                )}
+              >
+                <span className="shrink-0 flex items-center justify-center size-2xl" aria-hidden="true">
+                  <PlusCircleIcon className="w-full h-full" />
+                </span>
+                <span>Add accounts</span>
+              </button>
+            </>
           )}
         </div>
       )}

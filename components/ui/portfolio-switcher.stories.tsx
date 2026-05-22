@@ -7,26 +7,36 @@ const FIGMA_URL =
 
 // ─── Avatar fixtures ──────────────────────────────────────────────────────────
 
-function CircleAvatar({ bg, label }: { bg: string; label?: string }) {
-  return (
-    <span
-      className="absolute inset-0 flex items-center justify-center text-text-xxs font-medium text-text-white"
-      style={{ background: bg }}
-    >
-      {label}
-    </span>
-  );
-}
-
 function ImageAvatar({ src, alt }: { src: string; alt: string }) {
   return <img src={src} alt={alt} className="absolute inset-0 size-full object-cover" />;
 }
 
+function GridIcon() {
+  return (
+    <svg
+      className="absolute inset-0 size-full p-[3px]"
+      viewBox="0 0 256 256"
+      fill="none"
+      stroke="#414651"
+      strokeWidth={16}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <rect x="32" y="32" width="80" height="80" rx="8" />
+      <rect x="144" y="32" width="80" height="80" rx="8" />
+      <rect x="32" y="144" width="80" height="80" rx="8" />
+      <rect x="144" y="144" width="80" height="80" rx="8" />
+    </svg>
+  );
+}
+
 const PORTFOLIOS: Portfolio[] = [
-  { id: 'all',       name: 'All Portfolios', avatar: <CircleAvatar bg="#e0e0e0" label="A" /> },
-  { id: 'coinbase',  name: 'Coinbase',       avatar: <ImageAvatar src="brand-logos/brokers/coinbase.webp"  alt="Coinbase" /> },
-  { id: 'robinhood', name: 'Robinhood',      avatar: <ImageAvatar src="brand-logos/brokers/robinhood.png"  alt="Robinhood" /> },
-  { id: 'surmount',  name: 'Surmount',       avatar: <ImageAvatar src="brand-logos/brokers/surmount-icon.svg" alt="Surmount" /> },
+  { id: 'all',       name: 'All accounts',  avatar: <GridIcon /> },
+  { id: 'cash',      name: 'Surmount Cash', avatar: <ImageAvatar src="brand-logos/brokers/surmount-icon.svg" alt="Surmount Cash" /> },
+  { id: 'robinhood', name: 'Robinhood',     avatar: <ImageAvatar src="brand-logos/brokers/robinhood.png" alt="Robinhood" /> },
+  { id: 'ibkr',      name: 'IBKR',          avatar: <ImageAvatar src="brand-logos/brokers/ibkr.png" alt="IBKR" /> },
+  { id: 'schwab',    name: 'Schwab',         avatar: <ImageAvatar src="brand-logos/brokers/schwab.png" alt="Schwab" /> },
 ];
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
@@ -63,8 +73,8 @@ export const Default: Story = {
   args: { selectedId: 'all', open: false },
 };
 
-export const SelectedCoinbase: Story = {
-  args: { selectedId: 'coinbase', open: false },
+export const SelectedRobinhood: Story = {
+  args: { selectedId: 'robinhood', open: false },
 };
 
 export const Open: Story = {
@@ -72,7 +82,7 @@ export const Open: Story = {
 };
 
 export const OpenWithoutAddAccounts: Story = {
-  args: { selectedId: 'coinbase', open: true },
+  args: { selectedId: 'robinhood', open: true },
 };
 
 // ─── All variants in one frame ───────────────────────────────────────────────
@@ -81,9 +91,10 @@ export const AllVariants: Story = {
   render: (args) => (
     <div className="flex flex-col gap-8 p-6">
       <PortfolioSwitcher {...args} selectedId="all" open={false} />
+      <PortfolioSwitcher {...args} selectedId="robinhood" open={false} />
       <PortfolioSwitcher {...args} selectedId="all" open onAddAccount={() => undefined} />
-      <div className="pt-[280px]">
-        <PortfolioSwitcher {...args} selectedId="coinbase" open={false} />
+      <div className="pt-[320px]">
+        <PortfolioSwitcher {...args} selectedId="robinhood" open={false} />
       </div>
     </div>
   ),
