@@ -3,7 +3,9 @@
 ## 1. Stack
 
 - **Framework**: Next.js 15 (App Router) + React 18
-- **Styling**: Tailwind CSS v3 (config in `tailwind.config.ts`, tokens fed via CSS custom properties)
+- **Styling**: Tailwind CSS **v4** — CSS-first config via `@theme` in `app/theme.css`; no `tailwind.config.ts`. Tokens fed via CSS custom properties from `tokens/tokens.css`.
+- **Components**: **shadcn/ui (Radix primitives)** in `components/ui/`, configured by `components.json` (style `new-york`, lucide icons). Migrated from `react-aria-components` on 2026-06-10 — the old react-aria set is preserved on branch `backup/react-aria-pre-shadcn`.
+- **Theming bridge**: `tokens/shadcn-bridge.css` maps shadcn's semantic token names (`--background`, `--primary`, `--card`, …) onto the canonical Surmount `--color-*` tokens. See `tokens/shadcn-bridge.md` for the full map. **Do not let `shadcn add` re-inject its own raw token blocks into `app/globals.css`** — the bridge is canonical.
 - **Language**: TypeScript 5
 - **Component variants**: `class-variance-authority` (`cva`) + `clsx` + `tailwind-merge` (via `cn` helper in `lib/utils.ts`)
 - **Stories**: Storybook 8 with `@storybook/react-vite`. Deployed to GitHub Pages via CI on push to `main`.
@@ -32,8 +34,9 @@
 
 - `tokens/source/` holds raw JSON exported from Figma. Never edit these files manually.
 - `tokens/tokens.css` is generated from source. Do not hand-edit.
-- `components/ui/` is for primitives only (Button, TextInput, Badge, etc.) — no page-level components.
-- Each component lives in its own file: `button.tsx` + `button.stories.tsx`. No barrel `index.ts`.
+- `components/ui/` holds the shadcn/ui primitives plus a few Surmount-specific ones (`accounts-section.tsx`, `portfolio-switcher.tsx`, the composed `date-picker.tsx`). shadcn components ship without stories.
+- A consolidated gallery lives in `components/ui/showcase.stories.tsx` (title `Overview/Components`) — one story per category renders every component. Prefer extending this over adding 60 single-component story files.
+- Add new shadcn components with `npx shadcn@latest add <name>` (don't hand-author). After adding, confirm it didn't append raw token blocks to `app/globals.css`.
 
 ---
 
@@ -65,43 +68,40 @@ Figma token keys are transformed to CSS custom properties by:
 | `colorsTextTextErrorPrimary600` | `--color-text-error-primary-600` | `text-text-error-primary-600` |
 | `colorsBorderBorderError` | `--color-border-error` | `border-border-error` |
 
-**Dark mode**: set `data-theme="dark"` on `<html>` (or any container). Tokens auto-flip via `[data-theme="dark"]` selector configured in `tailwind.config.ts`.
+**Dark mode**: set `data-theme="dark"` on `<html>` (or any container). Tokens auto-flip via the `[data-theme="dark"]` selector in `tokens/tokens.css`. The `@custom-variant dark` in `app/globals.css` matches **both** `[data-theme="dark"]` and shadcn's `.dark` class, so react-aria tokens and shadcn `dark:` utilities stay in sync.
 
 ---
 
 ## 5. Components
 
-| Component | File | States covered |
+`components/ui/` is the **full shadcn/ui set** (~55 components: accordion, alert, alert-dialog,
+avatar, badge, breadcrumb, button, button-group, calendar, card, carousel, chart, checkbox,
+collapsible, command, context-menu, dialog, drawer, dropdown-menu, empty, field, hover-card,
+input, input-group, input-otp, item, kbd, label, menubar, native-select, navigation-menu,
+pagination, popover, progress, radio-group, resizable, scroll-area, select, separator, sheet,
+sidebar, skeleton, slider, sonner, spinner, switch, table, tabs, textarea, toggle, toggle-group,
+tooltip, …). APIs are standard shadcn/ui — refer to https://ui.shadcn.com/docs/components.
+
+Standard shadcn prop conventions apply: `variant` (`default | secondary | destructive | outline |
+ghost | link` on Button) and `size` (`default | sm | lg | icon`). These differ from the old
+react-aria props (no more `variant="primary"`, `invalid`, `errorText`, etc.).
+
+### Surmount-specific / composed components
+
+| Component | File | Notes |
 |---|---|---|
-| Badge | `badge.tsx` | variants × sizes |
-| Button | `button.tsx` | hierarchy × size × disabled |
-| Checkbox | `checkbox.tsx` | checkbox/radio × size × checked/indeterminate × disabled × with-label |
-| **DatePicker** | `date-picker.tsx` | resting / focused / filled / invalid / disabled, calendar popover, auto-mask, two-way sync, custom validators, imperative ref API |
-| Dropdown | `dropdown.tsx` | open/closed × selection × disabled |
-| PortfolioSwitcher | `portfolio-switcher.tsx` | (B2B-specific primitive) |
-| Sidebar | `sidebar.tsx` | nav primitive |
-| Table | `table.tsx` | row/header primitives |
-| Tabs | `tabs.tsx` | sizes × selection |
-| **Input** | `input.tsx` | resting / focused / filled / error / disabled, sm/md/lg, floating label, leading + trailing icons |
-| Toggle | `toggle.tsx` | sizes × on/off × disabled |
+| **DatePicker** | `date-picker.tsx` | Composed from Popover + Calendar + Button. Uncontrolled by default; pass `value` + `onChange` to control. Replaced the old react-aria auto-mask DatePicker. |
+| AccountsSection | `accounts-section.tsx` | B2B-specific (kept from the react-aria era). |
+| PortfolioSwitcher | `portfolio-switcher.tsx` | B2B-specific primitive (kept). |
 
-### Input field principles (Carbon-aligned)
+### Theming
 
-- `error={true}` + `errorText="…"` is the only way to enter the error state. The error message **takes precedence** over `helperText` — never show both at once.
-- Error visuals: `border-border-error` (`#cb6f68`), 3px focus ring at `rgba(203,111,104,0.18)`, `text-fg-error-primary` for the message + a circle-i warning icon.
-- The error message is announced to assistive tech via `role="alert"`. The input gets `aria-invalid="true"` and `aria-describedby` pointing at the message id.
-- **Disabled** is non-interactive: bg is `bg-bg-disabled`, border is `border-border-disabled-subtle`, cursor is `not-allowed`.
-- Helper text is suppressed in the error state — the error message replaces it.
-- Validation should not flash red while a user is mid-typing. Run inline validation only when input is "complete enough" (e.g. all 8 digits of a date), and unconditionally on `blur`.
-- The `iconTrailing` slot is NOT `aria-hidden` — it can receive interactive elements (e.g. a password-reveal button). Pass `aria-hidden="true"` on the icon itself if it is purely decorative.
-
-### Date picker specifics
-
-- Auto-mask: typing `04102000` becomes `04 / 10 / 2000` automatically. The mask strips non-digits, caps at 8, inserts ` / ` after MM and DD.
-- Two-way sync: typing a valid date moves the calendar view + selection; clicking a day fills the input.
-- Default validator rejects: invalid calendar dates, future dates, years < 1900. Override via `validate` prop.
-- Imperative API via `forwardRef<DatePickerHandle>`: `getValue()`, `setValue(v)`, `validate()` for submit-time checks.
-- Calendar popover is 296px wide, sits below the field with an 8px gap, anchored `left:0`.
+shadcn components use semantic utilities (`bg-background`, `text-muted-foreground`, `border-input`,
+`ring-ring`, `bg-primary`, …). Those resolve to Surmount tokens through `tokens/shadcn-bridge.css`.
+Reconciled decisions baked into the bridge: primary is **cool** (`--color-fg-primary-900`),
+destructive is the Surmount **red** (`--color-utility-error-600`) in both modes, borders are
+**alpha-black** (`--color-border-primary`), focus ring is **gray** (`--color-fg-secondary-700`),
+body tracking stays **−0.5px**. Don't reintroduce brand-blue CTAs or `0em` tracking.
 
 ---
 
@@ -150,8 +150,11 @@ Always test new components in Storybook before committing if a dev server is run
 
 ---
 
-## 7. Open Items
+## 8. Open Items
 
 - **No Figma Code Connect setup** — no `.figma.ts` mapping files yet. When wired up, components will be linked back to their Figma source via `add_code_connect_map`.
 - **Token regeneration script** — `tokens/tokens.css` is currently committed as a static file. A script that regenerates from `tokens/source/` is not yet in place.
 - **CI** — push-to-main triggers Pages deploy; there is no separate typecheck/lint workflow yet.
+- **shadcn components lack individual stories** — they're exercised collectively in `showcase.stories.tsx`. Per-component stories can be split out later if needed.
+- **Two component idioms coexist** — most of `components/ui/` is shadcn/Radix, but `accounts-section`/`portfolio-switcher` remain react-aria. Migrate to shadcn idioms when convenient, or leave as-is.
+- **`combobox.tsx`** ships from shadcn but is not yet wired into the showcase (Base UI-style API); add when needed.
