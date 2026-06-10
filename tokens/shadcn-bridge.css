@@ -1,0 +1,81 @@
+/*
+ * shadcn-bridge.css
+ * ───────────────────────────────────────────────────────────────────────────
+ * Maps shadcn/ui's semantic token names (--background, --primary, --card,
+ * --border, --chart-*, …) onto the canonical Surmount design tokens defined in
+ * tokens.css. Drop this in alongside any shadcn-style components so they theme
+ * correctly in Surmount terms instead of shipping their own raw values.
+ *
+ * Origin: reconciled from a tweakcn "surmount" theme export. See shadcn-bridge.md
+ * for the full token-by-token map, oklch→hex conversions, and the 5 design
+ * decisions that produced these overrides.
+ *
+ * Load order in app/globals.css (AFTER tokens.css so --color-* exist, and after
+ * any shadcn :root block so this wins):
+ *   @import "tailwindcss";
+ *   @import "../tokens/tokens.css";
+ *   @import "../tokens/shadcn-bridge.css";
+ *
+ * Decisions: primary stays COOL, border stays ALPHA-BLACK, destructive is RED in
+ * both modes, focus ring is GRAY, body tracking stays -0.5px.
+ */
+
+:root {
+  /* Surfaces */
+  --background: var(--color-bg-primary);
+  --foreground: var(--color-fg-primary-900);
+  --card: var(--color-bg-primary);
+  --card-foreground: var(--color-fg-primary-900);
+  --popover: var(--color-bg-primary);
+  --popover-foreground: var(--color-fg-primary-900);
+
+  /* Primary / secondary / accent (dark-gray CTA direction, cool not warm) */
+  --primary: var(--color-fg-primary-900);
+  --primary-foreground: var(--color-fg-white);
+  --secondary: var(--color-bg-secondary);
+  --secondary-foreground: var(--color-fg-primary-900);
+  --muted: var(--color-bg-tertiary);
+  --muted-foreground: var(--color-text-tertiary-600);
+  --accent: var(--color-bg-quaternary);
+  --accent-foreground: var(--color-fg-primary-900);
+
+  /* Status — matches Surmount error red exactly */
+  --destructive: var(--color-utility-error-600);
+  --destructive-foreground: var(--color-fg-white);
+
+  /* Lines (alpha-black so borders read on any surface) */
+  --border: var(--color-border-primary);
+  --input: var(--color-border-primary);
+  --ring: var(--color-fg-secondary-700);   /* gray focus ring (#414651), not brand */
+
+  /* Data viz — brand blue is allowed for charts */
+  --chart-1: var(--color-utility-brand-600);
+  --chart-2: var(--color-utility-warning-600);
+  --chart-3: var(--color-fg-quaternary-400);
+  --chart-4: var(--color-fg-disabled-subtle);
+  --chart-5: var(--color-fg-quaternary-hover);
+
+  /* Sidebar mirrors surfaces */
+  --sidebar: var(--color-bg-secondary);
+  --sidebar-foreground: var(--color-fg-primary-900);
+  --sidebar-primary: var(--color-fg-primary-900);
+  --sidebar-primary-foreground: var(--color-fg-white);
+  --sidebar-accent: var(--color-bg-quaternary);
+  --sidebar-accent-foreground: var(--color-fg-primary-900);
+  --sidebar-border: var(--color-border-primary);
+  --sidebar-ring: var(--color-fg-secondary-700);
+
+  /* Re-assert DS rules the theme would otherwise flatten */
+  --tracking-normal: -0.5px;        /* DS body tracking; theme shipped 0em */
+  --letter-spacing: -0.5px;
+  --radius: 0.5rem;                 /* base; cards use radius-xl (12px) */
+}
+
+/* Dark mode. tokens.css already flips --color-* under [data-theme="dark"], so
+   most vars inherit correct dark values. The one hard override is destructive,
+   which the source theme had shipped as cyan (#5bffff). */
+.dark,
+[data-theme="dark"] {
+  --destructive: var(--color-utility-error-600);
+  --destructive-foreground: var(--color-fg-white);
+}
