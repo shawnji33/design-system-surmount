@@ -27,16 +27,23 @@ export const RadioButtonBase = ({ className, isFocusVisible, isSelected, isDisab
     return (
         <div
             className={cx(
-                "flex size-4 shrink-0 cursor-pointer appearance-none items-center justify-center rounded-full bg-primary ring-1 ring-primary ring-inset",
+                "flex size-4 shrink-0 cursor-pointer appearance-none items-center justify-center overflow-hidden rounded-full bg-bg-primary ring-1 ring-border-primary ring-inset transition-colors duration-150 ease-linear",
                 size === "md" && "size-5",
-                isSelected && "bg-brand-solid ring-brand-solid",
-                isDisabled && "cursor-not-allowed opacity-50",
-                isDisabled && !isSelected && "bg-tertiary",
-                isFocusVisible && "outline-2 outline-offset-2 outline-focus-ring",
+                isSelected && "bg-bg-primary-solid ring-0",
+                isDisabled && "cursor-not-allowed bg-bg-disabled-subtle ring-border-disabled",
+                isDisabled && isSelected && "bg-bg-disabled-subtle ring-1",
+                isFocusVisible && "shadow-[0_0_0_2px_var(--color-bg-primary),0_0_0_4px_var(--focus-ring)]",
                 className,
             )}
         >
-            <div className={cx("size-1.5 rounded-full bg-fg-white opacity-0 transition-inherit-all", size === "md" && "size-2", isSelected && "opacity-100")} />
+            <div
+                className={cx(
+                    "size-1.5 rounded-full bg-fg-white opacity-0 transition-inherit-all",
+                    size === "md" && "size-2",
+                    isDisabled && "bg-fg-disabled-subtle",
+                    isSelected && "opacity-100",
+                )}
+            />
         </div>
     );
 };

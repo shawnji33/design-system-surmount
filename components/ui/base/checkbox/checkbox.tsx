@@ -14,15 +14,17 @@ export interface CheckboxBaseProps {
 }
 
 export const CheckboxBase = ({ className, isSelected, isDisabled, isIndeterminate, size = "sm", isFocusVisible = false }: CheckboxBaseProps) => {
+    const isActive = isSelected || isIndeterminate;
+
     return (
         <div
             className={cx(
-                "relative flex size-4 shrink-0 cursor-pointer appearance-none items-center justify-center rounded bg-primary ring-1 ring-primary ring-inset",
-                size === "md" && "size-5 rounded-md",
-                (isSelected || isIndeterminate) && "bg-brand-solid ring-brand-solid",
-                isDisabled && "cursor-not-allowed opacity-50",
-                isDisabled && !(isSelected || isIndeterminate) && "bg-tertiary",
-                isFocusVisible && "outline-2 outline-offset-2 outline-focus-ring",
+                "relative flex size-4 shrink-0 cursor-pointer appearance-none items-center justify-center overflow-hidden rounded-xs bg-bg-primary ring-1 ring-border-primary ring-inset transition-colors duration-150 ease-linear",
+                size === "md" && "size-5 rounded-sm",
+                isActive && "bg-bg-primary-solid ring-0",
+                isDisabled && "cursor-not-allowed bg-bg-disabled-subtle ring-border-disabled",
+                isDisabled && isActive && "bg-bg-disabled-subtle ring-1",
+                isFocusVisible && "shadow-[0_0_0_2px_var(--color-bg-primary),0_0_0_4px_var(--focus-ring)]",
                 className,
             )}
         >
@@ -33,6 +35,7 @@ export const CheckboxBase = ({ className, isSelected, isDisabled, isIndeterminat
                 className={cx(
                     "pointer-events-none absolute h-3 w-2.5 text-fg-white opacity-0 transition-inherit-all",
                     size === "md" && "size-3.5",
+                    isDisabled && "text-fg-disabled-subtle",
                     isIndeterminate && "opacity-100",
                 )}
             >
@@ -46,6 +49,7 @@ export const CheckboxBase = ({ className, isSelected, isDisabled, isIndeterminat
                 className={cx(
                     "pointer-events-none absolute size-3 text-fg-white opacity-0 transition-inherit-all",
                     size === "md" && "size-3.5",
+                    isDisabled && "text-fg-disabled-subtle",
                     isSelected && !isIndeterminate && "opacity-100",
                 )}
             >

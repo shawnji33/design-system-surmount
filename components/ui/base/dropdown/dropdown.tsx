@@ -1,7 +1,7 @@
 "use client";
 
 import { type FC, type RefAttributes, useCallback } from "react";
-import { Check, ChevronRight, DotsVertical } from "@untitledui/icons";
+import { CaretRight, Check, DotsThreeVertical, type Icon } from "@phosphor-icons/react";
 import type {
     ButtonProps as AriaButtonProps,
     MenuItemProps as AriaMenuItemProps,
@@ -34,7 +34,7 @@ interface DropdownItemProps extends AriaMenuItemProps {
     /** If true, the item will not have any styles. */
     unstyled?: boolean;
     /** An icon to be displayed on the left side of the item. */
-    icon?: FC<{ className?: string }>;
+    icon?: Icon | FC<{ className?: string }>;
     /** Avatar URL to be displayed on the left side of the item. */
     avatarUrl?: string;
     /** The selection indicator to be displayed on the item. */
@@ -116,7 +116,7 @@ const DropdownItem = ({ label, children, addon, icon: Icon, avatarUrl, unstyled,
 
                     {state.selectionMode !== "none" && (avatarUrl || Icon) && <SelectionIndicator {...state} className="ml-1" />}
 
-                    {state.hasSubmenu && <ChevronRight aria-hidden="true" className="ml-auto size-4 shrink-0 stroke-[2.25px] text-fg-quaternary" />}
+                    {state.hasSubmenu && <CaretRight aria-hidden="true" className="ml-auto size-4 shrink-0 stroke-[2.25px] text-fg-quaternary" />}
                 </div>
             )}
         </AriaMenuItem>
@@ -177,7 +177,7 @@ const DropdownDotsButton = (props: AriaButtonProps & RefAttributes<HTMLButtonEle
                 )
             }
         >
-            <DotsVertical className="size-5 transition-inherit-all" />
+            <DotsThreeVertical className="size-5 transition-inherit-all" />
         </AriaButton>
     );
 };

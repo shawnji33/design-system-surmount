@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { Settings01, LogOut01, User01, HelpCircle } from '@untitledui/icons';
+import { Gear, Question, SignOut, User } from '@phosphor-icons/react';
 import { Button } from 'react-aria-components';
 import { Dropdown } from './dropdown';
 import { cx } from '@/utils/cx';
@@ -25,11 +25,11 @@ export const Default: Story = {
       <Button className={triggerCls}>Open menu</Button>
       <Dropdown.Popover>
         <Dropdown.Menu>
-          <Dropdown.Item label="Profile" icon={User01} />
-          <Dropdown.Item label="Settings" icon={Settings01} />
-          <Dropdown.Item label="Help" icon={HelpCircle} />
+          <Dropdown.Item label="Profile" icon={User} />
+          <Dropdown.Item label="Settings" icon={Gear} />
+          <Dropdown.Item label="Help" icon={Question} />
           <Dropdown.Separator />
-          <Dropdown.Item label="Log out" icon={LogOut01} />
+          <Dropdown.Item label="Log out" icon={SignOut} />
         </Dropdown.Menu>
       </Dropdown.Popover>
     </Dropdown.Root>

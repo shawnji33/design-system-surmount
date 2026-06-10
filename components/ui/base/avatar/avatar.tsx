@@ -1,7 +1,7 @@
 "use client";
 
 import { type FC, type ReactNode, useState } from "react";
-import { User01 } from "@untitledui/icons";
+import { User, type Icon } from "@phosphor-icons/react";
 import { cx } from "@/utils/cx";
 import { AvatarOnlineIndicator, VerifiedTick } from "./base-components";
 import { AvatarCount } from "./base-components/avatar-count";
@@ -53,7 +53,7 @@ export interface AvatarProps {
     /**
      * An icon to display if no image is available.
      */
-    placeholderIcon?: FC<{ className?: string }>;
+    placeholderIcon?: Icon | FC<{ className?: string }>;
     /**
      * A placeholder to display if no image is available.
      */
@@ -111,7 +111,7 @@ export const Avatar = ({
             return <PlaceholderIcon className={cx("text-fg-quaternary", styles[size].icon)} />;
         }
 
-        return placeholder || <User01 className={cx("text-fg-quaternary", styles[size].icon)} />;
+        return placeholder || <User className={cx("text-fg-quaternary", styles[size].icon)} />;
     };
 
     const renderBadgeContent = () => {

@@ -179,7 +179,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
   }
 
   return (
-    <div className={cn('flex flex-col gap-xs w-full', className)}>
+    <div className={cn('flex flex-col gap-xs w-full -m-[3px] p-[3px] [box-sizing:content-box]', className)}>
       <label className={shell({ size: resolvedSize, error, disabled })} htmlFor={id}>
         {iconLeading != null && (
           <span
