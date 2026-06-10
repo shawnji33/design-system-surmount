@@ -1,225 +1,64 @@
-'use client';
+import * as React from "react"
+import { cva, type VariantProps } from "class-variance-authority"
+import { Slot } from "radix-ui"
 
-import { cva, type VariantProps } from 'class-variance-authority';
-import { Children, cloneElement, isValidElement, type ComponentPropsWithoutRef, type ReactNode } from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from "@/lib/utils"
 
-function Slot({ children, ...props }: ComponentPropsWithoutRef<'button'> & { children?: ReactNode }) {
-  if (isValidElement(children)) {
-    return cloneElement(children, { ...props, ...(children.props as object) } as object);
-  }
-  return <>{children}</>;
-}
-
-const button = cva(
-  [
-    'inline-flex items-center justify-center overflow-hidden rounded-md',
-    'font-body font-medium whitespace-nowrap select-none',
-    'transition-colors',
-    'focus-visible:outline-none focus-visible:shadow-[0_0_0_4px_var(--focus-ring)]',
-    'disabled:cursor-not-allowed disabled:shadow-none',
-  ],
+const buttonVariants = cva(
+  "inline-flex shrink-0 items-center justify-center gap-2 rounded-md text-sm font-medium whitespace-nowrap transition-all outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
   {
     variants: {
       variant: {
-        // Primary is a near-black neutral (fg-primary-900), not brand blue.
-        // Hover uses fg-secondary-hover (#252b37 — same hex as Figma's utility-gray-800 alias).
-        primary: [
-          'bg-fg-primary-900 border-2 border-[var(--color-alpha-white-12)] text-text-white',
-          'hover:bg-fg-secondary-hover',
-          'disabled:bg-fg-disabled disabled:border disabled:border-border-disabled-subtle disabled:text-fg-disabled-subtle',
-        ],
-        secondary: [
-          'bg-bg-primary border border-border-primary text-text-secondary-700',
-          'hover:bg-bg-primary-hover hover:text-text-secondary-hover',
-          'focus-visible:bg-bg-secondary',
-          'disabled:border-border-disabled-subtle disabled:text-fg-disabled',
-        ],
-        tertiary: [
-          'bg-transparent text-text-tertiary-600',
-          'hover:bg-bg-primary-hover hover:text-text-tertiary-hover',
-          'focus-visible:bg-bg-secondary',
-          'disabled:text-fg-disabled',
-        ],
-        'link-color': [
-          'bg-transparent text-text-brand-secondary-700',
-          'hover:text-text-brand-secondary-hover hover:underline',
-          'disabled:text-text-disabled',
-        ],
-        'link-gray': [
-          'bg-transparent text-text-tertiary-600',
-          'hover:text-text-tertiary-hover',
-          'disabled:text-text-disabled',
-        ],
+        default: "bg-primary text-primary-foreground hover:bg-primary/90",
+        destructive:
+          "bg-destructive text-white hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:bg-destructive/60 dark:focus-visible:ring-destructive/40",
+        outline:
+          "border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:border-input dark:bg-input/30 dark:hover:bg-input/50",
+        secondary:
+          "bg-secondary text-secondary-foreground hover:bg-secondary/80",
+        ghost:
+          "hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50",
+        link: "text-primary underline-offset-4 hover:underline",
       },
       size: {
-        xs: 'px-2-5 py-md gap-xs text-text-xs',
-        sm: 'px-lg py-md gap-xs text-text-sm',
-        md: 'px-3-5 py-2-5 gap-xs text-text-sm',
-        lg: 'px-xl py-2-5 gap-sm text-text-md',
-        xl: 'px-4-5 py-lg gap-sm text-text-md',
-      },
-      iconOnly: {
-        true: 'aspect-square',
-        false: '',
+        default: "h-9 px-4 py-2 has-[>svg]:px-3",
+        xs: "h-6 gap-1 rounded-md px-2 text-xs has-[>svg]:px-1.5 [&_svg:not([class*='size-'])]:size-3",
+        sm: "h-8 gap-1.5 rounded-md px-3 has-[>svg]:px-2.5",
+        lg: "h-10 rounded-md px-6 has-[>svg]:px-4",
+        icon: "size-9",
+        "icon-xs": "size-6 rounded-md [&_svg:not([class*='size-'])]:size-3",
+        "icon-sm": "size-8",
+        "icon-lg": "size-10",
       },
     },
-    compoundVariants: [
-      // Icon-only: symmetric padding per size (sm=8, md=10, lg=12, xl=14).
-      // xs × iconOnly is deprecated in Figma; keep as a runtime fallback.
-      { iconOnly: true, size: 'xs', class: 'px-md py-md' },
-      { iconOnly: true, size: 'sm', class: 'px-md py-md' },
-      { iconOnly: true, size: 'md', class: 'p-2-5' },
-      { iconOnly: true, size: 'lg', class: 'px-lg py-lg' },
-      { iconOnly: true, size: 'xl', class: 'p-3-5' },
-      // Link variants: strip padding, remove radius, allow overflow
-      { variant: 'link-color', class: 'px-0 py-0 rounded-none overflow-visible' },
-      { variant: 'link-gray',  class: 'px-0 py-0 rounded-none overflow-visible' },
-    ],
     defaultVariants: {
-      variant: 'primary',
-      size: 'md',
-      iconOnly: false,
+      variant: "default",
+      size: "default",
     },
-  },
-);
+  }
+)
 
-// Inline icons size to match the text cap-height of each size step.
-const iconSizeClass: Record<NonNullable<ButtonVariants['size']>, string> = {
-  xs: 'size-3-5',  // 14px
-  sm: 'size-xl',   // 16px
-  md: 'size-4-5',  // 18px
-  lg: 'size-2xl',  // 20px
-  xl: 'size-2xl',  // 20px
-};
-
-// Icon-only icons are uniformly 20px for sm/md/lg/xl in Figma — larger than
-// the inline size at sm (16) and md (18). xs has no Figma coverage.
-const iconOnlyIconSizeClass: Record<NonNullable<ButtonVariants['size']>, string> = {
-  xs: 'size-3-5',  // fallback — no Figma coverage
-  sm: 'size-2xl',
-  md: 'size-2xl',
-  lg: 'size-2xl',
-  xl: 'size-2xl',
-};
-
-// Loading spinner: padded variants use the "Button loading icon" size (20/24),
-// link variants reuse the inline-icon table since they have no padding.
-const paddedSpinnerSizeClass: Record<NonNullable<ButtonVariants['size']>, string> = {
-  xs: 'size-2xl',  // 20px
-  sm: 'size-2xl',  // 20px
-  md: 'size-2xl',  // 20px
-  lg: 'size-3xl',  // 24px
-  xl: 'size-3xl',  // 24px
-};
-
-function ButtonSpinner({ className }: { className?: string }) {
-  return (
-    <svg
-      className={cn('animate-spin shrink-0', className)}
-      xmlns="http://www.w3.org/2000/svg"
-      fill="none"
-      viewBox="0 0 24 24"
-      aria-hidden="true"
-    >
-      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" />
-      <path
-        className="opacity-75"
-        fill="currentColor"
-        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
-      />
-    </svg>
-  );
-}
-
-type ButtonVariants = VariantProps<typeof button>;
-
-export type ButtonProps = {
-  variant?: ButtonVariants['variant'];
-  size?: ButtonVariants['size'];
-  loading?: boolean;
-  asChild?: boolean;
-  iconLeading?: ReactNode;
-  iconTrailing?: ReactNode;
-  iconOnly?: boolean;
-  children?: ReactNode;
-} & Omit<ComponentPropsWithoutRef<'button'>, 'children'>;
-
-const loadingBgClass: Partial<Record<NonNullable<ButtonVariants['variant']>, string>> = {
-  primary:   'bg-fg-secondary-hover',
-  secondary: 'bg-bg-primary-hover',
-  tertiary:  'bg-bg-primary-hover',
-};
-
-export function Button({
-  variant = 'primary',
-  size = 'md',
-  disabled = false,
-  loading = false,
-  asChild = false,
-  iconLeading,
-  iconTrailing,
-  iconOnly = false,
+function Button({
   className,
-  children,
+  variant = "default",
+  size = "default",
+  asChild = false,
   ...props
-}: ButtonProps) {
-  const Comp = asChild ? Slot : 'button';
-  const sz = size ?? 'md';
-  const vr = variant ?? 'primary';
-  const isLink = vr === 'link-color' || vr === 'link-gray';
-  const spinnerClass = isLink ? iconSizeClass[sz] : paddedSpinnerSizeClass[sz];
-  const renderedIconSize = iconOnly ? iconOnlyIconSizeClass[sz] : iconSizeClass[sz];
+}: React.ComponentProps<"button"> &
+  VariantProps<typeof buttonVariants> & {
+    asChild?: boolean
+  }) {
+  const Comp = asChild ? Slot.Root : "button"
 
   return (
     <Comp
+      data-slot="button"
+      data-variant={variant}
+      data-size={size}
+      className={cn(buttonVariants({ variant, size, className }))}
       {...props}
-      disabled={disabled}
-      aria-busy={loading || undefined}
-      className={cn(
-        button({ variant: vr, size: sz, iconOnly }),
-        loading && loadingBgClass[vr],
-        loading && 'cursor-default pointer-events-none',
-        className,
-      )}
-    >
-      {loading ? (
-        <>
-          <ButtonSpinner className={spinnerClass} />
-          {!iconOnly && children != null && (
-            <span className="flex items-center justify-center px-xxs">{children}</span>
-          )}
-        </>
-      ) : iconOnly ? (
-        <span
-          className={cn('shrink-0 flex items-center justify-center', renderedIconSize)}
-          aria-hidden="true"
-        >
-          {iconLeading ?? children}
-        </span>
-      ) : (
-        <>
-          {iconLeading != null && (
-            <span
-              className={cn('shrink-0 flex items-center justify-center', renderedIconSize)}
-              aria-hidden="true"
-            >
-              {iconLeading}
-            </span>
-          )}
-          {children != null && (
-            <span className="flex items-center justify-center px-xxs">{children}</span>
-          )}
-          {iconTrailing != null && (
-            <span
-              className={cn('shrink-0 flex items-center justify-center', renderedIconSize)}
-              aria-hidden="true"
-            >
-              {iconTrailing}
-            </span>
-          )}
-        </>
-      )}
-    </Comp>
-  );
+    />
+  )
 }
+
+export { Button, buttonVariants }

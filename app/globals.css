@@ -2,5 +2,14 @@
 @import "../tokens/tokens.css";
 @import "../tokens/shadcn-bridge.css";
 @import "./theme.css";
+
+/* Dark mode keys off BOTH the DS `data-theme="dark"` attribute and shadcn's
+   `.dark` class, so react-aria tokens and shadcn `dark:` utilities stay in sync. */
+@custom-variant dark (&:is([data-theme="dark"] *, [data-theme="dark"], .dark *, .dark));
+
 @plugin "tailwindcss-animate";
 @plugin "tailwindcss-react-aria-components";
+
+/* Sidebar tokens are provided by tokens/shadcn-bridge.css (mapped to Surmount
+   --color-* values). The shadcn `add sidebar` step injected its own gray-blue
+   hsl defaults + @theme inline here; removed so the bridge stays canonical. */

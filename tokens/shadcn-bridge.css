@@ -1,24 +1,60 @@
 /*
  * shadcn-bridge.css
  * ───────────────────────────────────────────────────────────────────────────
- * Maps shadcn/ui's semantic token names (--background, --primary, --card,
- * --border, --chart-*, …) onto the canonical Surmount design tokens defined in
- * tokens.css. Drop this in alongside any shadcn-style components so they theme
- * correctly in Surmount terms instead of shipping their own raw values.
+ * Makes shadcn/ui components theme themselves from canonical Surmount tokens.
  *
- * Origin: reconciled from a tweakcn "surmount" theme export. See shadcn-bridge.md
- * for the full token-by-token map, oklch→hex conversions, and the 5 design
- * decisions that produced these overrides.
+ * Two parts:
+ *   1. @theme inline — registers shadcn's semantic names (background, primary,
+ *      card, border, chart-*, …) as Tailwind v4 theme colors so utilities like
+ *      `bg-background`, `text-muted-foreground`, `border-input`, `ring-ring`
+ *      actually generate.
+ *   2. :root / .dark — points those semantic vars at Surmount --color-* tokens
+ *      (defined in tokens.css), with the reconciled design decisions.
  *
- * Load order in app/globals.css (AFTER tokens.css so --color-* exist, and after
- * any shadcn :root block so this wins):
+ * Load order in app/globals.css (AFTER tokens.css so --color-* exist):
  *   @import "tailwindcss";
  *   @import "../tokens/tokens.css";
  *   @import "../tokens/shadcn-bridge.css";
+ *   @import "./theme.css";
  *
- * Decisions: primary stays COOL, border stays ALPHA-BLACK, destructive is RED in
- * both modes, focus ring is GRAY, body tracking stays -0.5px.
+ * Decisions (see shadcn-bridge.md): primary COOL, border ALPHA-BLACK,
+ * destructive RED in both modes, focus ring GRAY, body tracking -0.5px.
  */
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
 
 :root {
   /* Surfaces */
