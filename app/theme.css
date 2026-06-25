@@ -364,11 +364,15 @@
      Maps Untitled UI component token names to Surmount CSS vars so that
      components added via `npx untitledui add` work out-of-the-box.
      ─────────────────────────────────────────────────────────────────────── */
-  --color-primary: var(--color-bg-primary);
+  /* NOTE: --color-primary and --color-secondary are intentionally NOT aliased
+     here — they are owned by tokens/shadcn-bridge.css (shadcn semantic colors:
+     primary = dark CTA, secondary = light surface). Re-adding the UUI aliases
+     re-breaks shadcn `bg-primary`/`text-primary`/`bg-secondary` (renders
+     white-on-white). Use `bg-bg-primary` / `--color-bg-primary` for the
+     Surmount surface token instead. */
   --color-primary_hover: var(--color-bg-primary-hover);
   --color-primary-solid: var(--color-bg-primary-solid);
   --color-tertiary: var(--color-bg-tertiary);
-  --color-secondary: var(--color-fg-secondary-700);
   --color-secondary_hover: var(--color-fg-secondary-hover);
   --color-quaternary: var(--color-fg-quaternary-400);
   --color-secondary_alt: var(--color-border-secondary-alt);
