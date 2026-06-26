@@ -103,6 +103,13 @@ destructive is the Surmount **red** (`--color-utility-error-600`) in both modes,
 **alpha-black** (`--color-border-primary`), focus ring is **gray** (`--color-fg-secondary-700`),
 body tracking stays **−0.5px**. Don't reintroduce brand-blue CTAs or `0em` tracking.
 
+**Brand blue is now the exception, not the accent.** All UI chrome — checked checkboxes/radios,
+toggle on-state, selected-card borders, focus rings, hover/selection — is **gray** (`fg-primary-900`
+fills, `fg-secondary-700` rings). Brand blue (`#406ad0`) is reserved for (a) intentional
+informational **callouts** the design is deliberately highlighting (e.g. a "Save 2 months"
+savings badge) and (b) charts/data-viz. When in doubt whether something is chrome vs. a callout,
+default to gray.
+
 ---
 
 ## 6. Micro-interaction Scale (Emil Kowalski — animations.dev)
